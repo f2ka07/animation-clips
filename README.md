@@ -200,7 +200,8 @@ RUNPOD_API_KEY=...          # D:\VideoApp\.env
 RUNPOD_T2I_ENDPOINT_ID=seedream-v4-t2i
 RUNPOD_I2V_ENDPOINT_ID=kling-v2-1-i2v-pro
 RUNPOD_T2V_ENDPOINT_ID=minimax-hailuo-02-std
-SEEDREAM_SIZE=1280*720
+VIDEO_URL_FIELD=result
+IMAGE_URL_FIELD=result
 VIDEO_URL_FIELD=result
 IMAGE_URL_FIELD=result
 ```

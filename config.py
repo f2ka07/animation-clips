@@ -2,6 +2,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 import os
+import re
 
 _BASE_DIR = Path(__file__).resolve().parent
 
@@ -107,7 +108,14 @@ MINIMAX_HAILUO_EXPANSION_FIELD: str = _str_env(
     "MINIMAX_HAILUO_EXPANSION_FIELD", "enable_prompt_expansion"
 )
 CHARACTER_DESCRIPTION: str = _str_env("CHARACTER_DESCRIPTION", "")
-SEEDREAM_SIZE: str = _str_env("SEEDREAM_SIZE", "1280*720")
+# Seedream accepts fixed sizes only (see SEEDSTREAM.md): 1024*1024, 2048*2048, 4096*2048, etc.
+SEEDREAM_SIZE: str = _str_env("SEEDREAM_SIZE", "2048*2048")
+SEEDREAM_ALLOWED_SIZES: tuple[str, ...] = (
+    "1024*1024",
+    "2048*2048",
+    "4096*2048",
+    "2048*4096",
+)
 SEEDREAM_ENABLE_SAFETY_CHECKER: bool = _bool_env("SEEDREAM_ENABLE_SAFETY_CHECKER", True)
 KLING_GUIDANCE_SCALE: float = _float_env("KLING_GUIDANCE_SCALE", 0.5)
 KLING_ENABLE_SAFETY_CHECKER: bool = _bool_env("KLING_ENABLE_SAFETY_CHECKER", True)
@@ -268,6 +276,21 @@ def wrap_request_body(payload: dict[str, object]) -> dict[str, object]:
     return payload
 
 
+def normalize_seedream_size(raw: str | None = None) -> str:
+    """Normalize Seedream size to WIDTH*HEIGHT (API also accepts WIDTHxHEIGHT)."""
+    value = (raw or SEEDREAM_SIZE).strip().replace("x", "*").replace("X", "*")
+    if not re.fullmatch(r"\d+\*\d+", value):
+        raise ValueError(
+            f"Invalid SEEDREAM_SIZE '{raw}'. Use format like '2048*2048' or '4096*2048'."
+        )
+    if value not in SEEDREAM_ALLOWED_SIZES:
+        allowed = ", ".join(SEEDREAM_ALLOWED_SIZES)
+        raise ValueError(
+            f"SEEDREAM_SIZE '{value}' is not supported. Use one of: {allowed}"
+        )
+    return value
+
+
 def build_seedream_t2i_payload(
     prompt: str,
     negative_prompt: str,
@@ -278,7 +301,7 @@ def build_seedream_t2i_payload(
     return {
         PROMPT_FIELD: prompt,
         NEGATIVE_PROMPT_FIELD: negative_prompt,
-        "size": size or SEEDREAM_SIZE,
+        "size": normalize_seedream_size(size),
         SEED_FIELD: SEED if seed is None else seed,
         "enable_safety_checker": SEEDREAM_ENABLE_SAFETY_CHECKER,
     }
