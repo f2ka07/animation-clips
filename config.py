@@ -89,6 +89,16 @@ MINIMAX_DOWNLOAD_URL_FIELD: str = _str_env(
 RUNPOD_API_KEY: str = _str_env("RUNPOD_API_KEY")
 RUNPOD_MODE: str = _str_env("RUNPOD_MODE", "serverless").lower()
 RUNPOD_ENDPOINT_ID: str = _str_env("RUNPOD_ENDPOINT_ID")
+RUNPOD_T2V_ENDPOINT_ID: str = _str_env(
+    "RUNPOD_T2V_ENDPOINT_ID", _str_env("RUNPOD_ENDPOINT_ID", "minimax-hailuo-02-std")
+)
+RUNPOD_T2I_ENDPOINT_ID: str = _str_env(
+    "RUNPOD_T2I_ENDPOINT_ID",
+    _str_env("RUNPOD_ENDPOINT_FLUX", "seedream-v4-t2i"),
+)
+RUNPOD_I2V_ENDPOINT_ID: str = _str_env(
+    "RUNPOD_I2V_ENDPOINT_ID", "kling-v2-1-i2v-pro"
+)
 RUNPOD_PAYLOAD_PROFILE: str = _str_env("RUNPOD_PAYLOAD_PROFILE", "wan").lower()
 MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION: bool = _bool_env(
     "MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION", False
@@ -97,6 +107,12 @@ MINIMAX_HAILUO_EXPANSION_FIELD: str = _str_env(
     "MINIMAX_HAILUO_EXPANSION_FIELD", "enable_prompt_expansion"
 )
 CHARACTER_DESCRIPTION: str = _str_env("CHARACTER_DESCRIPTION", "")
+SEEDREAM_SIZE: str = _str_env("SEEDREAM_SIZE", "1280*720")
+SEEDREAM_ENABLE_SAFETY_CHECKER: bool = _bool_env("SEEDREAM_ENABLE_SAFETY_CHECKER", True)
+KLING_GUIDANCE_SCALE: float = _float_env("KLING_GUIDANCE_SCALE", 0.5)
+KLING_ENABLE_SAFETY_CHECKER: bool = _bool_env("KLING_ENABLE_SAFETY_CHECKER", True)
+IMAGE_URL_FIELD: str = _str_env("IMAGE_URL_FIELD", "result")
+IMAGE_BASE64_FIELD: str = _str_env("IMAGE_BASE64_FIELD", "image_base64")
 SERVERLESS_BASE_URL: str = _str_env(
     "SERVERLESS_BASE_URL", "https://api.runpod.ai/v2"
 ).rstrip("/")
@@ -220,12 +236,10 @@ def build_generation_payload(
     resolved_duration = DURATION if duration_seconds is None else duration_seconds
 
     if PROVIDER == "runpod" and RUNPOD_PAYLOAD_PROFILE == "minimax_hailuo":
-        hailuo_duration = 6 if resolved_duration <= 6 else 10
-        return {
-            PROMPT_FIELD: prompt,
-            DURATION_FIELD: hailuo_duration,
-            MINIMAX_HAILUO_EXPANSION_FIELD: MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION,
-        }
+        return build_minimax_t2v_payload(
+            prompt=prompt,
+            duration_seconds=duration_seconds,
+        )
 
     payload: dict[str, object] = {
         PROMPT_FIELD: prompt,
@@ -252,3 +266,55 @@ def wrap_request_body(payload: dict[str, object]) -> dict[str, object]:
     if REQUEST_WRAPPER_KEY:
         return {REQUEST_WRAPPER_KEY: payload}
     return payload
+
+
+def build_seedream_t2i_payload(
+    prompt: str,
+    negative_prompt: str,
+    *,
+    seed: int | None = None,
+    size: str | None = None,
+) -> dict[str, object]:
+    return {
+        PROMPT_FIELD: prompt,
+        NEGATIVE_PROMPT_FIELD: negative_prompt,
+        "size": size or SEEDREAM_SIZE,
+        SEED_FIELD: SEED if seed is None else seed,
+        "enable_safety_checker": SEEDREAM_ENABLE_SAFETY_CHECKER,
+    }
+
+
+def build_kling_i2v_payload(
+    prompt: str,
+    image_url: str,
+    negative_prompt: str = "",
+    *,
+    duration_seconds: int | None = None,
+    guidance_scale: float | None = None,
+) -> dict[str, object]:
+    resolved_duration = DURATION if duration_seconds is None else duration_seconds
+    kling_duration = 5 if resolved_duration <= 5 else 10
+    return {
+        PROMPT_FIELD: prompt,
+        "image": image_url,
+        NEGATIVE_PROMPT_FIELD: negative_prompt,
+        "guidance_scale": KLING_GUIDANCE_SCALE
+        if guidance_scale is None
+        else guidance_scale,
+        "duration": kling_duration,
+        "enable_safety_checker": KLING_ENABLE_SAFETY_CHECKER,
+    }
+
+
+def build_minimax_t2v_payload(
+    prompt: str,
+    *,
+    duration_seconds: int | None = None,
+) -> dict[str, object]:
+    resolved_duration = DURATION if duration_seconds is None else duration_seconds
+    hailuo_duration = 6 if resolved_duration <= 6 else 10
+    return {
+        PROMPT_FIELD: prompt,
+        "duration": hailuo_duration,
+        MINIMAX_HAILUO_EXPANSION_FIELD: MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION,
+    }

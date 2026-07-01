@@ -38,6 +38,11 @@ def parse_args() -> argparse.Namespace:
         help="Print I2V animation prompt for an action sentence",
     )
     parser.add_argument("--duration", type=int, default=6, choices=[5, 6, 10])
+    parser.add_argument(
+        "--generate",
+        action="store_true",
+        help="Call RunPod T2I API (prompt from scenes.json, key from .env)",
+    )
     parser.add_argument("--json", action="store_true", help="Output scene record as JSON")
     return parser.parse_args()
 
@@ -82,6 +87,16 @@ def main() -> None:
     if scene is None:
         console.print(f"[red]Scene not found:[/red] {args.scene}")
         sys.exit(1)
+
+    if args.generate:
+        from generate_master import generate_master_for_scene
+
+        try:
+            generate_master_for_scene(args.scene, dry_run=False, force=False)
+        except Exception as exc:
+            console.print(f"[red]Generation failed:[/red] {exc}")
+            sys.exit(1)
+        return
 
     if args.json:
         console.print(json.dumps(scene.model_dump(mode="json"), indent=2))

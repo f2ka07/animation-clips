@@ -185,6 +185,48 @@ python generate_clip.py --title "Desk Stare" --category work --tags "office,focu
   --action "Stick figure opens laptop, stares at screen, then slumps slightly."
 ```
 
+### Scene pipeline (T2I master + I2V clip) — matches `D:\VideoApp\API`
+
+Three RunPod endpoints, one API key from `.env`, prompts from `data/scenes.json`:
+
+| Step | Endpoint | CLI |
+|------|----------|-----|
+| Master still image | `seedream-v4-t2i` | `generate_master.py` |
+| Animate master | `kling-v2-1-i2v-pro` | `generate_scene_clip.py` |
+| Direct text-to-video | `minimax-hailuo-02-std` | `generate_clip.py` |
+
+```env
+RUNPOD_API_KEY=...          # D:\VideoApp\.env
+RUNPOD_T2I_ENDPOINT_ID=seedream-v4-t2i
+RUNPOD_I2V_ENDPOINT_ID=kling-v2-1-i2v-pro
+RUNPOD_T2V_ENDPOINT_ID=minimax-hailuo-02-std
+SEEDREAM_SIZE=1280*720
+VIDEO_URL_FIELD=result
+IMAGE_URL_FIELD=result
+```
+
+**1. Generate master PNG** (prompt built from scene record in JSON):
+
+```bash
+python generate_master.py --scene office_two_people_meeting --dry-run
+python generate_master.py --scene office_two_people_meeting
+```
+
+Saves `masters/office_two_people_meeting.png` and registers the RunPod image URL in `data/scene_assets.json`.
+
+**2. Animate master** (action from JSON `example_actions` or `--action`):
+
+```bash
+python generate_scene_clip.py --scene office_two_people_meeting --action-index 0 --dry-run
+python generate_scene_clip.py --scene office_two_people_meeting --action-index 0 --duration 5
+```
+
+**3. Batch missing masters:**
+
+```bash
+python generate_master.py --all-missing
+```
+
 ### Configurable request payload
 
 Field names are fully configurable in `.env`. The default serverless payload maps to:
