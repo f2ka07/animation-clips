@@ -3,6 +3,20 @@
 CLIP_DURATION_MIN = 5
 CLIP_DURATION_MAX = 10
 
+SETTING_BACKGROUNDS: dict[str, str] = {
+    "desk": "Simple desk with a notebook on off white paper.",
+    "office": "Simple office desk with a laptop on off white paper.",
+    "bed": "Simple bed with a bedside table on off white paper.",
+    "kitchen counter": "Simple kitchen counter with a cup on off white paper.",
+    "couch": "Simple couch on off white paper.",
+    "doorway": "Simple doorway on off white paper.",
+    "chair": "Simple chair on off white paper.",
+    "bus stop": "Simple bus stop sign on off white paper.",
+    "hallway": "Simple hallway on off white paper.",
+    "bathroom mirror": "Simple bathroom mirror on off white paper.",
+    "grocery aisle": "Simple grocery shelf on off white paper.",
+}
+
 BEAT_TYPES = (
     "setup",
     "trigger",
@@ -16,6 +30,7 @@ BEAT_TYPES = (
 
 EVERYDAY_SETTINGS = (
     "desk",
+    "office",
     "bed",
     "kitchen counter",
     "couch",
@@ -72,8 +87,29 @@ def build_style_prefix(duration_seconds: int | None = None) -> str:
     )
 
 
-def build_prompt(action_prompt: str, duration_seconds: int | None = None) -> str:
-    return f"{build_style_prefix(duration_seconds)} {action_prompt.strip()}"
+def build_background(setting: str | None = None, background: str | None = None) -> str:
+    if background:
+        return background.strip()
+    if setting and setting in SETTING_BACKGROUNDS:
+        return SETTING_BACKGROUNDS[setting]
+    if setting and setting in EVERYDAY_SETTINGS:
+        return f"Simple {setting} on off white paper."
+    return ""
+
+
+def build_prompt(
+    action_prompt: str,
+    duration_seconds: int | None = None,
+    *,
+    setting: str | None = None,
+    background: str | None = None,
+) -> str:
+    style = build_style_prefix(duration_seconds)
+    action = action_prompt.strip()
+    bg = build_background(setting=setting, background=background)
+    if bg:
+        return f"{style} Background: {bg} Action: {action}"
+    return f"{style} {action}"
 
 
 def build_action(

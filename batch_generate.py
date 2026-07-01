@@ -66,6 +66,7 @@ def run_batch(specs_path: Path | None = None) -> list[BatchFailure]:
                     tags=spec.tags,
                     action=spec.action,
                     duration_seconds=spec.duration_seconds,
+                    setting=spec.setting or None,
                 )
                 console.print(
                     f"[green]Completed:[/green] {record.title} -> {record.filename}"

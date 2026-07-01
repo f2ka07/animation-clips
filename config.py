@@ -3,9 +3,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
 _BASE_DIR = Path(__file__).resolve().parent
+
+load_dotenv(_BASE_DIR / ".env")
+load_dotenv(_BASE_DIR.parent / ".env", override=False)
 
 
 def _require(name: str) -> str:
@@ -88,6 +89,13 @@ MINIMAX_DOWNLOAD_URL_FIELD: str = _str_env(
 RUNPOD_API_KEY: str = _str_env("RUNPOD_API_KEY")
 RUNPOD_MODE: str = _str_env("RUNPOD_MODE", "serverless").lower()
 RUNPOD_ENDPOINT_ID: str = _str_env("RUNPOD_ENDPOINT_ID")
+RUNPOD_PAYLOAD_PROFILE: str = _str_env("RUNPOD_PAYLOAD_PROFILE", "wan").lower()
+MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION: bool = _bool_env(
+    "MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION", False
+)
+MINIMAX_HAILUO_EXPANSION_FIELD: str = _str_env(
+    "MINIMAX_HAILUO_EXPANSION_FIELD", "enable_prompt_expansion"
+)
 SERVERLESS_BASE_URL: str = _str_env(
     "SERVERLESS_BASE_URL", "https://api.runpod.ai/v2"
 ).rstrip("/")
@@ -204,6 +212,15 @@ def build_generation_payload(
 ) -> dict[str, object]:
     resolved_seed = SEED if seed is None else seed
     resolved_duration = DURATION if duration_seconds is None else duration_seconds
+
+    if PROVIDER == "runpod" and RUNPOD_PAYLOAD_PROFILE == "minimax_hailuo":
+        hailuo_duration = 6 if resolved_duration <= 6 else 10
+        return {
+            PROMPT_FIELD: prompt,
+            DURATION_FIELD: hailuo_duration,
+            MINIMAX_HAILUO_EXPANSION_FIELD: MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION,
+        }
+
     payload: dict[str, object] = {
         PROMPT_FIELD: prompt,
         NEGATIVE_PROMPT_FIELD: negative_prompt,

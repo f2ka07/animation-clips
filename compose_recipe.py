@@ -31,12 +31,17 @@ def load_recipes(path: Path | None = None) -> list[VideoRecipe]:
     return [VideoRecipe.model_validate(item) for item in raw]
 
 
-def resolve_clip(ref: RecipeClipRef) -> ClipRecord | None:
+def resolve_clip(ref: RecipeClipRef, approved_only: bool = True) -> tuple[ClipRecord | None, str]:
     matches = find_by_title(ref.title)
     for clip in matches:
-        if clip.category.lower() == ref.category.lower() and clip.status.value == "completed":
-            return clip
-    return None
+        if clip.category.lower() != ref.category.lower():
+            continue
+        if clip.status.value != "completed":
+            continue
+        if approved_only and clip.review_status.value != "approved":
+            return None, clip.review_status.value
+        return clip, "approved"
+    return None, "missing"
 
 
 def show_recipe(recipe: VideoRecipe) -> None:
@@ -54,7 +59,7 @@ def show_recipe(recipe: VideoRecipe) -> None:
 
     total_duration = 0
     for index, ref in enumerate(recipe.clips, start=1):
-        clip = resolve_clip(ref)
+        clip, state = resolve_clip(ref)
         if clip:
             total_duration += clip.duration_seconds
             table.add_row(
@@ -65,11 +70,12 @@ def show_recipe(recipe: VideoRecipe) -> None:
                 clip.filename or "-",
             )
         else:
+            status = "[red]missing[/red]" if state == "missing" else f"[yellow]{state}[/yellow]"
             table.add_row(
                 str(index),
                 ref.title,
                 ref.category,
-                "[red]missing[/red]",
+                status,
                 "-",
             )
 

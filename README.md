@@ -162,6 +162,29 @@ China mainland base URL: `https://api.minimaxi.com/v1`
 
 To use Runpod instead of AWS, set `PROVIDER=runpod` and configure `RUNPOD_MODE`, `RUNPOD_API_KEY`, and `RUNPOD_ENDPOINT_ID` (serverless) or `API_HOST` (pod). See commented variables at the bottom of `.env.example`.
 
+The project loads `RUNPOD_API_KEY` from `wan-stick-clips/.env` or the parent `D:\VideoApp\.env` automatically.
+
+### MiniMax Hailuo on RunPod (recommended for hosted generation)
+
+Matches the curl in `D:\VideoApp\API`:
+
+```env
+PROVIDER=runpod
+RUNPOD_MODE=serverless
+RUNPOD_ENDPOINT_ID=minimax-hailuo-02-std
+RUNPOD_PAYLOAD_PROFILE=minimax_hailuo
+DURATION_FIELD=duration
+MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION=false
+```
+
+Stick-figure clips should keep `enable_prompt_expansion=false` so the model does not add photoreal detail. Duration is sent as `6` or `10` (MiniMax Hailuo accepts those values).
+
+```bash
+python generate_clip.py --title "Desk Stare" --category work --tags "office,focus" \
+  --setting office --duration 6 \
+  --action "Stick figure opens laptop, stares at screen, then slumps slightly."
+```
+
 ### Configurable request payload
 
 Field names are fully configurable in `.env`. The default serverless payload maps to:
@@ -258,6 +281,32 @@ On Linux/macOS, replace `^` with `\` for line continuation.
 
 The MP4 is saved under `outputs/` with a filename like `procrastination_avoiding_work_YYYYMMDD_HHMMSS.mp4` and indexed in `data/clips_index.json`.
 
+## Quality workflow
+
+Quality is enforced at three stages:
+
+1. **Prompt design** — atomic beats, Background + Action format, `--setting` for reusable backgrounds ([PROMPT.md](PROMPT.md)).
+2. **Preflight** — `quality.preflight_clip()` runs before every API call; errors block unless you pass `--force`.
+3. **Human review** — completed clips stay `pending_review` until you approve them; only approved clips resolve in recipes.
+
+**Dry-run (no API cost):**
+
+```bash
+python generate_clip.py --title "Test" --category work --tags test \
+  --setting office --duration 6 --dry-run \
+  --action "Stick figure opens laptop and stares at blank screen."
+```
+
+**Review after watching the MP4:**
+
+```bash
+python library.py --pending-review
+python library.py --approve --title "Desk Stare" --clip-category work
+python compose_recipe.py --recipe why_we_procrastinate
+```
+
+`compose_recipe.py` shows `pending_review` in yellow and only stitches **approved** clips.
+
 ## Generate batch clips
 
 `data/clip_specs.json` contains 20 starter psychology clips.
@@ -303,6 +352,9 @@ python generate_clip.py --title "..." --category "..." --tags "..." --duration 1
 python library.py --tag delay
 python library.py --category procrastination
 python library.py --title "Avoiding Work"
+python library.py --pending-review
+python library.py --approved
+python library.py --approve --title "Avoiding Work" --clip-category procrastination
 ```
 
 ## Configuration

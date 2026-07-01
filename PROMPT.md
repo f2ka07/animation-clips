@@ -337,3 +337,61 @@ You have the idea right when:
 4. A new video is mostly **recipe + stitch**, not new generation
 
 That is unlimited reusable everyday-life production.
+
+---
+
+## Quality workflow
+
+Quality is enforced in three layers: **prompt design**, **pre-generation checks**, and **human review**.
+
+### 1. Prompt design (before generation)
+
+- One beat, one location, 1-2 stick figures (see atomic clip rules above).
+- Use **Background + Action** format so settings stay consistent across clips:
+  - `Background: Simple office desk, white wall, minimal props.`
+  - `Action: Stick figure hesitates over notebook, then picks up phone and scrolls.`
+- Pass `--setting office` or `--background "..."` to `generate_clip.py` / `script_builder.py`.
+- Keep `enable_prompt_expansion=false` for RunPod MiniMax Hailuo (expansion adds unwanted detail).
+
+### 2. Pre-generation preflight (`quality.py`)
+
+Before calling the API, `generate_clip.py` runs `preflight_clip()`:
+
+- Errors block generation (use `--force` to override).
+- Warnings print but still generate.
+
+Checks include: action length, prompt word count, duration 5-10s, photoreal triggers, expansion flag, Background+Action format.
+
+Dry-run without spending credits:
+
+```bash
+python generate_clip.py --title "Test" --category "work" --tags "test" \
+  --action "Stick figure opens laptop and stares at blank screen." \
+  --setting office --duration 6 --dry-run
+```
+
+### 3. Human review (after generation)
+
+New clips are saved with `review_status=pending_review`. Watch the MP4 in `outputs/`, then:
+
+```bash
+python library.py --pending-review
+python library.py --approve --title "Avoiding Work" --clip-category procrastination
+python library.py --reject --title "Bad Take" --clip-category procrastination
+```
+
+Only **approved** clips are used when resolving recipes (`compose_recipe.py`). Pending or rejected clips show as yellow/red in the recipe table.
+
+### RunPod MiniMax Hailuo (matches `D:\VideoApp\API`)
+
+Put `RUNPOD_API_KEY` in `D:\VideoApp\.env` (loaded automatically) or `wan-stick-clips/.env`:
+
+```env
+PROVIDER=runpod
+RUNPOD_ENDPOINT_ID=minimax-hailuo-02-std
+RUNPOD_PAYLOAD_PROFILE=minimax_hailuo
+MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION=false
+```
+
+Payload shape matches your curl: `input.prompt`, `input.duration` (6 or 10), `input.enable_prompt_expansion`.
+
