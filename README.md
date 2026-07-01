@@ -223,11 +223,17 @@ python generate_scene_clip.py --scene office_two_people_meeting --action-index 0
 python generate_scene_clip.py --scene office_two_people_meeting --action-index 0 --duration 5
 ```
 
-**3. Batch missing masters:**
+**3. Batch missing masters (phase 1):**
 
 ```bash
-python generate_master.py --all-missing
+python batch_masters.py
+# or
+python generate_master.py --phase1
+python generate_master.py --phase1 --dry-run
+python generate_master.py --phase1 --limit 3
 ```
+
+Phase 1 skips scenes that already have a file in `masters/`, retries failures up to 3 times, and writes errors to `logs/batch_master_failures_<timestamp>.json`. Estimated cost: 29 missing x $0.027 = ~$0.78 (30 total x $0.027 = $0.81).
 
 ### Configurable request payload
 
