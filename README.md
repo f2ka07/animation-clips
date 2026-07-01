@@ -235,6 +235,24 @@ python generate_master.py --phase1 --limit 3
 
 Phase 1 skips scenes that already have a file in `masters/`, retries failures up to 3 times, and writes errors to `logs/batch_master_failures_<timestamp>.json`. Estimated cost: 29 missing x $0.027 = ~$0.78 (30 total x $0.027 = $0.81).
 
+**4. Phase 2 — batch animate all masters (Kling I2V):**
+
+```bash
+# Preview: 90 clips x $0.45 = ~$40.50 at 5s
+python batch_scene_clips.py --dry-run
+
+# One clip per scene first (30 x $0.45 = ~$13.50)
+python batch_scene_clips.py --actions-per-scene 1
+
+# Full library: 3 actions x 30 scenes = 90 clips
+python batch_scene_clips.py
+
+# Test one scene
+python batch_scene_clips.py --scene office_two_people_meeting --limit 1
+```
+
+Clips save to `outputs/`, index in `data/scene_clips_index.json` and `data/clips_index.json` as `pending_review`. Approve with `python library.py --approve --title office_two_people_meeting_a0 --clip-category office`.
+
 ### Configurable request payload
 
 Field names are fully configurable in `.env`. The default serverless payload maps to:
