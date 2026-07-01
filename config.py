@@ -123,7 +123,12 @@ STATUS_FAILED: str = _str_env("STATUS_FAILED", "FAILED")
 STATUS_IN_QUEUE: str = _str_env("STATUS_IN_QUEUE", "IN_QUEUE")
 STATUS_IN_PROGRESS: str = _str_env("STATUS_IN_PROGRESS", "IN_PROGRESS")
 
-VIDEO_URL_FIELD: str = _str_env("VIDEO_URL_FIELD", "video_url")
+_DEFAULT_VIDEO_URL_FIELD = (
+    "result"
+    if PROVIDER == "runpod" and RUNPOD_PAYLOAD_PROFILE == "minimax_hailuo"
+    else "video_url"
+)
+VIDEO_URL_FIELD: str = _str_env("VIDEO_URL_FIELD", _DEFAULT_VIDEO_URL_FIELD)
 VIDEO_BASE64_FIELD: str = _str_env("VIDEO_BASE64_FIELD", "video_base64")
 VIDEO_S3_FIELD: str = _str_env("VIDEO_S3_FIELD", "video_s3_uri")
 

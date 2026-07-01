@@ -177,7 +177,7 @@ DURATION_FIELD=duration
 MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION=false
 ```
 
-Stick-figure clips should keep `enable_prompt_expansion=false` so the model does not add photoreal detail. Duration is sent as `6` or `10` (MiniMax Hailuo accepts those values).
+Response uses `output.result` as the MP4 URL (set `VIDEO_URL_FIELD=result`). Duration is sent as `6` or `10` (MiniMax Hailuo accepts those values).
 
 ```bash
 python generate_clip.py --title "Desk Stare" --category work --tags "office,focus" \
