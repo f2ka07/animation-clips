@@ -1,0 +1,122 @@
+[
+  {
+    "title": "Avoiding Work",
+    "category": "procrastination",
+    "tags": ["delay", "work", "phone", "avoidance"],
+    "action": "A stick figure sits at a desk with a notebook. The figure looks at the work, hesitates, notices a phone, picks it up, smiles while scrolling, then looks worried as a clock appears in the background."
+  },
+  {
+    "title": "Phone Distraction",
+    "category": "attention",
+    "tags": ["phone", "distraction", "focus", "habit"],
+    "action": "A stick figure tries to read a book at a desk. A phone buzzes nearby. The figure reaches for the phone, scrolls briefly, then looks back at the book with a tired expression."
+  },
+  {
+    "title": "Overthinking Message",
+    "category": "anxiety",
+    "tags": ["overthinking", "message", "worry", "delay"],
+    "action": "A stick figure holds a phone and stares at a blank message box. A thought bubble appears with question marks. The figure types, deletes, then hesitates with slumped shoulders."
+  },
+  {
+    "title": "Fear of Judgment",
+    "category": "social_pressure",
+    "tags": ["judgment", "fear", "crowd", "hesitation"],
+    "action": "A stick figure stands near a simple door. Several faint stick figures appear as outlines in the background. The main figure hesitates, steps forward, then steps back."
+  },
+  {
+    "title": "Comparing With Others",
+    "category": "social_pressure",
+    "tags": ["comparison", "envy", "phone", "self-esteem"],
+    "action": "A stick figure scrolls on a phone while another stick figure walks past with a confident posture. The scrolling figure slumps and looks down at the screen."
+  },
+  {
+    "title": "Reward Loop",
+    "category": "reward_loop",
+    "tags": ["reward", "dopamine", "phone", "loop"],
+    "action": "A stick figure taps a phone, a small star appears, smiles, taps again, then repeats the motion in a simple looping rhythm beside a desk."
+  },
+  {
+    "title": "Comfort Zone Trap",
+    "category": "comfort_zone",
+    "tags": ["comfort", "fear", "box", "change"],
+    "action": "A stick figure sits inside a simple drawn box. An arrow points outward toward an open door. The figure reaches toward the edge, then pulls back and sits down again."
+  },
+  {
+    "title": "Impulse Buying",
+    "category": "money",
+    "tags": ["impulse", "shopping", "temptation", "regret"],
+    "action": "A stick figure sees a small item on a simple counter, grabs it quickly with a smile, then looks at an empty wallet and frowns."
+  },
+  {
+    "title": "Decision Paralysis",
+    "category": "decision_making",
+    "tags": ["decision", "paralysis", "choice", "stress"],
+    "action": "A stick figure stands between two simple arrows pointing left and right. The figure looks back and forth, scratches head, and freezes in place."
+  },
+  {
+    "title": "People Pleasing",
+    "category": "social_pressure",
+    "tags": ["people-pleasing", "agreement", "stress", "mask"],
+    "action": "A stick figure nods eagerly at another stick figure, then turns away with a tired expression and a small thought bubble showing a frown."
+  },
+  {
+    "title": "Silent Resentment",
+    "category": "conflict",
+    "tags": ["resentment", "silence", "conflict", "emotion"],
+    "action": "Two stick figures stand facing each other. One speaks with a speech bubble. The other smiles stiffly, then turns aside with a tight jaw and crossed arms."
+  },
+  {
+    "title": "Confidence Shift",
+    "category": "habit",
+    "tags": ["confidence", "posture", "growth", "habit"],
+    "action": "A stick figure starts with slumped shoulders by a chair, then slowly straightens posture, lifts chin, and takes one calm step forward."
+  },
+  {
+    "title": "Habit Trigger",
+    "category": "habit",
+    "tags": ["trigger", "cue", "routine", "automation"],
+    "action": "A stick figure walks past a desk, sees a coffee cup, and automatically reaches for a phone without thinking. A simple loop arrow appears above."
+  },
+  {
+    "title": "Anxiety Spiral",
+    "category": "anxiety",
+    "tags": ["anxiety", "spiral", "worry", "overthinking"],
+    "action": "A stick figure sits on a chair with a small thought bubble. The bubble grows with swirling lines. The figure holds head and curls inward slightly."
+  },
+  {
+    "title": "Small Win Motivation",
+    "category": "reward_loop",
+    "tags": ["motivation", "small-win", "progress", "habit"],
+    "action": "A stick figure checks a single box on a simple list, smiles, and takes one energetic step forward with a small star above the head."
+  },
+  {
+    "title": "Deadline Panic",
+    "category": "procrastination",
+    "tags": ["deadline", "panic", "clock", "rush"],
+    "action": "A stick figure sits at a desk with an untouched notebook. A large clock appears behind. The figure jumps up and frantically scribbles."
+  },
+  {
+    "title": "Social Media Loop",
+    "category": "attention",
+    "tags": ["social-media", "scroll", "loop", "distraction"],
+    "action": "A stick figure scrolls on a phone in a repeating motion. A circular arrow appears above the phone. The figure blinks slowly and keeps scrolling."
+  },
+  {
+    "title": "Temptation Resistance",
+    "category": "habit",
+    "tags": ["temptation", "resistance", "self-control", "choice"],
+    "action": "A stick figure reaches toward a snack on a desk, pauses, pulls hand back, and drinks water from a simple cup instead."
+  },
+  {
+    "title": "Regret After Choice",
+    "category": "decision_making",
+    "tags": ["regret", "choice", "reflection", "emotion"],
+    "action": "A stick figure makes a quick choice between two simple items, smiles briefly, then looks down with a regretful expression and slumped shoulders."
+  },
+  {
+    "title": "Learning From Failure",
+    "category": "comfort_zone",
+    "tags": ["failure", "learning", "growth", "retry"],
+    "action": "A stick figure falls beside a simple box, sits up, draws a small arrow on paper, then stands and tries again with calmer posture."
+  }
+]
