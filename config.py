@@ -65,6 +65,25 @@ AWS_SECRET_ACCESS_KEY: str = _str_env("AWS_SECRET_ACCESS_KEY")
 AWS_SESSION_TOKEN: str = _str_env("AWS_SESSION_TOKEN")
 AWS_SAGEMAKER_ENDPOINT_NAME: str = _str_env("AWS_SAGEMAKER_ENDPOINT_NAME")
 
+# MiniMax
+MINIMAX_API_KEY: str = _str_env("MINIMAX_API_KEY")
+MINIMAX_API_BASE: str = _str_env(
+    "MINIMAX_API_BASE", "https://api.minimax.io/v1"
+).rstrip("/")
+MINIMAX_MODEL: str = _str_env("MINIMAX_MODEL", "MiniMax-Hailuo-2.3")
+MINIMAX_RESOLUTION: str = _str_env("MINIMAX_RESOLUTION", "")
+MINIMAX_PROMPT_OPTIMIZER: bool = _bool_env("MINIMAX_PROMPT_OPTIMIZER", True)
+MINIMAX_GENERATE_PATH: str = _str_env("MINIMAX_GENERATE_PATH", "/video_generation")
+MINIMAX_QUERY_PATH: str = _str_env("MINIMAX_QUERY_PATH", "/query/video_generation")
+MINIMAX_FILE_PATH: str = _str_env("MINIMAX_FILE_PATH", "/files/retrieve")
+MINIMAX_STATUS_SUCCESS: str = _str_env("MINIMAX_STATUS_SUCCESS", "Success")
+MINIMAX_STATUS_FAILED: str = _str_env("MINIMAX_STATUS_FAILED", "Fail")
+MINIMAX_TASK_ID_FIELD: str = _str_env("MINIMAX_TASK_ID_FIELD", "task_id")
+MINIMAX_FILE_ID_FIELD: str = _str_env("MINIMAX_FILE_ID_FIELD", "file_id")
+MINIMAX_DOWNLOAD_URL_FIELD: str = _str_env(
+    "MINIMAX_DOWNLOAD_URL_FIELD", "file.download_url"
+)
+
 # RunPod (legacy provider)
 RUNPOD_API_KEY: str = _str_env("RUNPOD_API_KEY")
 RUNPOD_MODE: str = _str_env("RUNPOD_MODE", "serverless").lower()
@@ -166,8 +185,14 @@ def validate_runtime_config() -> None:
         validate_config()
         return
 
+    if PROVIDER == "minimax":
+        from providers.minimax import validate_config
+
+        validate_config()
+        return
+
     raise RuntimeError(
-        f"Unsupported PROVIDER '{PROVIDER}'. Supported providers: aws, runpod"
+        f"Unsupported PROVIDER '{PROVIDER}'. Supported providers: aws, runpod, minimax"
     )
 
 

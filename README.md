@@ -10,12 +10,12 @@ generate_clip.py
         v
   VideoProvider  (PROVIDER in .env)
         |
-   +----+----+----+
-   |         |    |
-   AWS    Runpod  Fal   (future providers)
+   +----+----+----+----+
+   |         |    |    |
+   AWS   Minimax Runpod Fal   (future providers)
 ```
 
-Each provider is self-contained under `providers/`. AWS REST and SageMaker transport live in `providers/aws.py`. Runpod remains available as a legacy provider via `PROVIDER=runpod`.
+Each provider is self-contained under `providers/`. Switch backends by setting `PROVIDER` in `.env` only — the CLI, payload builder, and library code stay the same.
 
 Model selection is also configuration-only:
 
@@ -136,6 +136,27 @@ Your worker can return any of:
 ```
 
 Field names are configurable via `VIDEO_URL_FIELD`, `VIDEO_BASE64_FIELD`, and `VIDEO_S3_FIELD`.
+
+## MiniMax provider
+
+Use hosted MiniMax video generation without a GPU server. Set `PROVIDER=minimax` and add your API key:
+
+```
+PROVIDER=minimax
+MINIMAX_API_KEY=your_api_key_here
+```
+
+Optional:
+
+```
+MINIMAX_API_BASE=https://api.minimax.io/v1
+MINIMAX_MODEL=MiniMax-Hailuo-2.3
+MINIMAX_RESOLUTION=768P
+```
+
+The provider maps the standard CLI payload (`prompt`, `width`, `height`, `duration_seconds`, etc.) to the [MiniMax video API](https://platform.minimax.io/docs/guides/video-generation). No `API_HOST`, `AWS_MODE`, or Runpod settings are required.
+
+China mainland base URL: `https://api.minimaxi.com/v1`
 
 ## Runpod (legacy provider)
 
@@ -269,7 +290,17 @@ All generation behavior is driven by `.env`. No URLs, JSON field names, model fa
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PROVIDER` | `aws` | Video provider backend (`aws`, `runpod`) |
+| `PROVIDER` | `aws` | Video provider backend (`aws`, `minimax`, `runpod`) |
+
+### MiniMax connection
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MINIMAX_API_KEY` | | API key (required when `PROVIDER=minimax`) |
+| `MINIMAX_API_BASE` | `https://api.minimax.io/v1` | API base URL |
+| `MINIMAX_MODEL` | `MiniMax-Hailuo-2.3` | MiniMax video model |
+| `MINIMAX_RESOLUTION` | | Override resolution (`720P`, `768P`, `1080P`); auto from height if empty |
+| `MINIMAX_PROMPT_OPTIMIZER` | `true` | Enable MiniMax prompt optimization |
 
 ### AWS connection
 
@@ -409,6 +440,7 @@ wan-stick-clips/
 │   ├── __init__.py      # create_video_provider()
 │   ├── base.py          # VideoProvider interface
 │   ├── aws.py           # AWS REST + SageMaker
+│   ├── minimax.py       # MiniMax hosted API
 │   └── runpod.py        # Runpod (legacy)
 ├── prompts.py
 ├── generate_clip.py

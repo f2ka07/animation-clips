@@ -17,8 +17,13 @@ def create_video_provider() -> VideoProvider:
 
         return RunpodVideoProvider()
 
+    if config.PROVIDER == "minimax":
+        from providers.minimax import MinimaxVideoProvider
+
+        return MinimaxVideoProvider()
+
     raise VideoProviderError(
-        f"Unsupported PROVIDER '{config.PROVIDER}'. Supported: aws, runpod"
+        f"Unsupported PROVIDER '{config.PROVIDER}'. Supported: aws, runpod, minimax"
     )
 
 
