@@ -88,6 +88,7 @@ MINIMAX_DOWNLOAD_URL_FIELD: str = _str_env(
 
 # RunPod (legacy provider)
 RUNPOD_API_KEY: str = _str_env("RUNPOD_API_KEY")
+RUNPOD_SSL_VERIFY: bool = _bool_env("RUNPOD_SSL_VERIFY", True)
 RUNPOD_MODE: str = _str_env("RUNPOD_MODE", "serverless").lower()
 RUNPOD_ENDPOINT_ID: str = _str_env("RUNPOD_ENDPOINT_ID")
 RUNPOD_T2V_ENDPOINT_ID: str = _str_env(

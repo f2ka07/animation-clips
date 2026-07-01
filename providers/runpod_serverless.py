@@ -42,6 +42,10 @@ def _status_url(endpoint_id: str, job_id: str) -> str:
     return f"{config.SERVERLESS_BASE_URL}/{endpoint_id}{status_path}/{job_id}"
 
 
+def _request_kwargs() -> dict[str, object]:
+    return {"verify": config.RUNPOD_SSL_VERIFY}
+
+
 def submit_job(endpoint_id: str, input_payload: dict[str, Any]) -> str:
     body = config.wrap_request_body(input_payload)
     response = requests.post(
@@ -49,6 +53,7 @@ def submit_job(endpoint_id: str, input_payload: dict[str, Any]) -> str:
         headers=_auth_headers(),
         json=body,
         timeout=60,
+        **_request_kwargs(),
     )
     response.raise_for_status()
     data = response.json()
@@ -70,6 +75,7 @@ def poll_job(endpoint_id: str, job_id: str) -> dict[str, Any]:
             _status_url(endpoint_id, job_id),
             headers=_auth_headers(),
             timeout=60,
+            **_request_kwargs(),
         )
         response.raise_for_status()
         data = response.json()
@@ -144,7 +150,7 @@ def extract_media_url(output: dict[str, Any]) -> str:
 def download_url(url: str, destination: Path) -> Path:
     destination.parent.mkdir(parents=True, exist_ok=True)
     console.print(f"[cyan]Downloading[/cyan] {url}")
-    response = requests.get(url, timeout=300)
+    response = requests.get(url, timeout=300, **_request_kwargs())
     response.raise_for_status()
     destination.write_bytes(response.content)
     return destination
