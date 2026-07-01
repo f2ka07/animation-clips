@@ -5,3 +5,6 @@ logs/*
 !logs/.gitkeep
 __pycache__/
 *.pyc
+.start.sh
+.PROMPT.md
+.FEEDBACK.md
