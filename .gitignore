@@ -5,6 +5,10 @@ logs/*
 !logs/.gitkeep
 __pycache__/
 *.pyc
+*.pem
+server/.env
+server/models/*
+!server/models/.gitkeep
+server/videos/*
+!server/videos/.gitkeep
 .start.sh
-.PROMPT.md
-.FEEDBACK.md

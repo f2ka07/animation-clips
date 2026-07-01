@@ -1,0 +1,20 @@
+services:
+  wan-server:
+    build:
+      context: .
+      args:
+        WAN_GIT_REF: main
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./models:/models
+      - ./videos:/data/videos
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

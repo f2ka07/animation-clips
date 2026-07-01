@@ -61,11 +61,20 @@ On Linux/macOS, use `cp .env.example .env` and `source .venv/bin/activate` inste
 
 ## AWS endpoint setup
 
-Deploy a **WAN 2.2 or WAN 2.6 T2V compatible handler** on AWS as either a REST API (EC2 GPU, ALB, or API Gateway) or a SageMaker endpoint. Copy `.env.example` to `.env` and fill in the connection settings for your deployment mode.
+We ship our own inference server in `server/`, built around the [official Wan 2.2 code](https://github.com/Wan-Video/Wan2.2) with a lightweight FastAPI wrapper. This replaces community Docker images (for example `docker.io/antilopax/wan22:v43`) with a stable API that matches this project's `.env` defaults.
 
-**Note:** ComfyUI templates are allowed only for manual visual testing. This production CLI assumes a direct REST or SageMaker endpoint.
+See **[server/README.md](server/README.md)** for build and deploy steps.
 
-### REST mode (default) - EC2, ALB, or API Gateway
+Summary:
+
+1. Build the Docker image from `server/`.
+2. Download official Wan weights to the GPU host.
+3. Run the container on AWS EC2 with GPU.
+4. Point the CLI `.env` at the server host.
+
+**Note:** ComfyUI templates are allowed only for manual visual testing. This production stack uses our FastAPI server around official Wan 2.2 inference.
+
+### REST mode (default) - EC2 with our Wan server
 
 Set in `.env`:
 
@@ -96,7 +105,7 @@ AUTH_HEADER_NAME=x-api-key
 API_AUTH_TOKEN=your_api_gateway_key
 ```
 
-### SageMaker mode
+### SageMaker mode (optional alternative)
 
 Set in `.env`:
 
@@ -404,6 +413,10 @@ wan-stick-clips/
 ├── generate_clip.py
 ├── batch_generate.py
 ├── library.py
+├── server/              # Wan 2.2 FastAPI inference (Docker, deploy on AWS GPU)
+│   ├── Dockerfile
+│   ├── README.md
+│   └── app/
 ├── data/
 │   ├── clip_specs.json
 │   └── clips_index.json
