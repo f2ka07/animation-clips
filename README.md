@@ -253,6 +253,15 @@ python batch_scene_clips.py --scene office_two_people_meeting --limit 1
 
 Clips save to `outputs/`, index in `data/scene_clips_index.json` and `data/clips_index.json` as `pending_review`. Approve with `python library.py --approve --title office_two_people_meeting_a0 --clip-category office`.
 
+**5. Stitch trial video (free, local ffmpeg):**
+
+```bash
+python stitch_video.py --preview
+python stitch_video.py --output outputs/trial_a_day_in_the_mind.mp4
+```
+
+Uses `data/trial_video.json` — all 30 scene clips in a day-in-the-life order (~150s).
+
 ### Configurable request payload
 
 Field names are fully configurable in `.env`. The default serverless payload maps to:
