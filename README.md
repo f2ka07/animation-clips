@@ -200,11 +200,12 @@ RUNPOD_API_KEY=...          # D:\VideoApp\.env
 RUNPOD_T2I_ENDPOINT_ID=seedream-v4-t2i
 RUNPOD_I2V_ENDPOINT_ID=kling-v2-1-i2v-pro
 RUNPOD_T2V_ENDPOINT_ID=minimax-hailuo-02-std
-VIDEO_URL_FIELD=result
-IMAGE_URL_FIELD=result
+SEEDREAM_SIZE=2048*2048
 VIDEO_URL_FIELD=result
 IMAGE_URL_FIELD=result
 ```
+
+Allowed `SEEDREAM_SIZE` values: `1024*1024`, `2048*2048`, `4096*2048`, `2048*4096` (see `SEEDSTREAM.md`). Use `4096*2048` for wide office/home masters.
 
 **1. Generate master PNG** (prompt built from scene record in JSON):
 
