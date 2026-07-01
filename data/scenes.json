@@ -1,0 +1,602 @@
+[
+  {
+    "id": "office_single_worker",
+    "family": "office",
+    "title": "Single Worker at Desk",
+    "variant": "single_worker",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "office_single_worker.png",
+    "protagonist_position": "seated center at desk facing laptop",
+    "secondary_position": "",
+    "layout": "One worker sits at an office desk with an open laptop, notebook, and coffee cup. A wall clock and small bookshelf sit behind the desk.",
+    "composition": "Wide static office interior, desk centered, clear floor space, window on the right with simple blinds.",
+    "props": ["desk", "laptop", "notebook", "cup", "office chair", "wall clock", "bookshelf", "window", "small plant"],
+    "reuse_tags": ["work", "focus", "procrastination", "productivity", "deadline", "solo"],
+    "example_actions": [
+      "The protagonist types on the laptop, pauses, and rubs the chin while thinking.",
+      "The protagonist notices the clock, slumps, and returns to the laptop with renewed urgency.",
+      "The protagonist closes the notebook, opens the phone, and scrolls with a guilty expression."
+    ]
+  },
+  {
+    "id": "office_desk_close",
+    "family": "office",
+    "title": "Desk Close-Up",
+    "variant": "desk_close",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "office_desk_close.png",
+    "protagonist_position": "upper body visible behind desk, hands on desk",
+    "secondary_position": "",
+    "layout": "Tighter framing on a desk surface with laptop, phone, checklist, and pen. One worker is visible from chest up behind the desk.",
+    "composition": "Medium-wide shot focused on desk objects with the figure behind them, minimal background detail.",
+    "props": ["desk", "laptop", "phone", "checklist", "pen", "cup", "sticky notes"],
+    "reuse_tags": ["work", "phone", "distraction", "planning", "decision", "desk"],
+    "example_actions": [
+      "The protagonist reaches for the phone, hesitates with fingers hovering, then pulls the hand back.",
+      "The protagonist checks items on the checklist and crosses one line with the pen.",
+      "The protagonist stares at the laptop screen with slumped shoulders and still hands."
+    ]
+  },
+  {
+    "id": "office_two_people_meeting",
+    "family": "office",
+    "title": "Two Person Meeting",
+    "variant": "two_meeting",
+    "actor_count": 2,
+    "supporting_figures": 0,
+    "master_filename": "office_two_people_meeting.png",
+    "protagonist_position": "left side of meeting table",
+    "secondary_position": "right side of meeting table",
+    "layout": "Two stick figures sit across from each other at a meeting table with two chairs, laptop, whiteboard, window, and office plant.",
+    "composition": "Wide static office meeting room, table centered, whiteboard on back wall, window on side wall.",
+    "props": ["meeting table", "two chairs", "laptop", "whiteboard", "window", "office plant", "marker tray"],
+    "reuse_tags": ["meeting", "conversation", "interview", "negotiation", "feedback", "work", "conflict"],
+    "example_actions": [
+      "The left figure points toward the whiteboard while speaking. The right figure nods and opens the laptop.",
+      "The left figure leans forward with hands on the table. The right figure crosses arms and looks away.",
+      "Both figures shake hands briefly across the table, then sit back with relaxed posture."
+    ]
+  },
+  {
+    "id": "office_team_meeting",
+    "family": "office",
+    "title": "Team Meeting Table",
+    "variant": "team_meeting",
+    "actor_count": 2,
+    "supporting_figures": 2,
+    "master_filename": "office_team_meeting.png",
+    "protagonist_position": "head of long table, near whiteboard end",
+    "secondary_position": "right side midway down table",
+    "layout": "A long meeting table with four chairs. Two foreground figures are clear; two background figures are faint at the far end.",
+    "composition": "Wide conference room, long table receding into background, whiteboard visible behind head of table.",
+    "props": ["long meeting table", "four chairs", "whiteboard", "laptop", "water glasses", "office plant", "wall clock"],
+    "reuse_tags": ["team", "meeting", "presentation", "brainstorm", "work", "group"],
+    "example_actions": [
+      "The head-of-table figure gestures toward the whiteboard while the right-side figure takes notes.",
+      "The right-side figure raises one hand to speak while the head-of-table figure pauses and listens.",
+      "Both foreground figures turn toward the faint background figures as if inviting input."
+    ]
+  },
+  {
+    "id": "office_presentation",
+    "family": "office",
+    "title": "Presentation Room",
+    "variant": "presentation",
+    "actor_count": 1,
+    "supporting_figures": 1,
+    "master_filename": "office_presentation.png",
+    "protagonist_position": "standing left of screen near whiteboard",
+    "secondary_position": "",
+    "layout": "One presenter stands beside a simple projection screen and whiteboard. One faint seated figure appears in the front row.",
+    "composition": "Wide room with presenter on left, screen center, two rows of empty chairs, audience area open.",
+    "props": ["projection screen", "whiteboard", "presenter remote", "chair rows", "small table", "laptop"],
+    "reuse_tags": ["presentation", "teaching", "coaching", "public-speaking", "work", "explain"],
+    "example_actions": [
+      "The presenter points at the screen, then turns toward the seated figure with an open palm gesture.",
+      "The presenter shifts weight nervously, then straightens posture and continues pointing at the screen.",
+      "The presenter places the remote on the table and uses both hands to emphasize a point."
+    ]
+  },
+  {
+    "id": "office_reception",
+    "family": "office",
+    "title": "Office Reception",
+    "variant": "reception",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "office_reception.png",
+    "protagonist_position": "standing behind reception counter",
+    "secondary_position": "",
+    "layout": "A reception counter with a seated waiting chair, office plant, wall clock, and entry door behind the counter.",
+    "composition": "Front-facing reception area, counter across lower frame, door and clock on back wall.",
+    "props": ["reception counter", "waiting chair", "office plant", "wall clock", "entry door", "phone", "visitor book"],
+    "reuse_tags": ["arrival", "waiting", "job-interview", "appointment", "work", "anxiety"],
+    "example_actions": [
+      "The protagonist checks the wall clock, taps the counter, and shifts weight from foot to foot.",
+      "The protagonist picks up the phone, listens briefly, and places it down with a polite nod.",
+      "The protagonist opens the visitor book, hesitates, and looks toward the entry door."
+    ]
+  },
+  {
+    "id": "office_open_plan",
+    "family": "office",
+    "title": "Open Plan Office",
+    "variant": "open_plan",
+    "actor_count": 2,
+    "supporting_figures": 0,
+    "master_filename": "office_open_plan.png",
+    "protagonist_position": "left desk facing laptop",
+    "secondary_position": "right desk turned slightly toward protagonist",
+    "layout": "Two parallel desks with laptops and dividers. Each desk has one seated worker facing their screen.",
+    "composition": "Wide open office floor, two desks in foreground, simple filing cabinet and plant in back.",
+    "props": ["two desks", "two laptops", "two chairs", "desk dividers", "filing cabinet", "office plant", "wall clock"],
+    "reuse_tags": ["coworker", "comparison", "distraction", "work", "social-pressure", "focus"],
+    "example_actions": [
+      "The left figure works on the laptop while the right figure turns and watches with curious posture.",
+      "The right figure stretches and smiles while the left figure slumps and stares at the screen.",
+      "Both figures reach for their phones at the same time, then glance at each other awkwardly."
+    ]
+  },
+  {
+    "id": "office_hallway",
+    "family": "office",
+    "title": "Office Hallway",
+    "variant": "hallway",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "office_hallway.png",
+    "protagonist_position": "center of hallway facing forward",
+    "secondary_position": "",
+    "layout": "A simple office hallway with doors on both sides, a water cooler, wall clock, and notice board.",
+    "composition": "One-point perspective hallway, figure mid-frame, doors symmetrically placed, no depth clutter.",
+    "props": ["hallway", "two doors", "water cooler", "wall clock", "notice board", "floor lines"],
+    "reuse_tags": ["transition", "avoidance", "late", "work", "decision", "walk"],
+    "example_actions": [
+      "The protagonist walks slowly toward the far door, slows down, and stops before reaching it.",
+      "The protagonist checks the wall clock, turns around, and takes one step back.",
+      "The protagonist stands at the water cooler, fills a cup, and stares at the notice board."
+    ]
+  },
+  {
+    "id": "home_living_room",
+    "family": "home",
+    "title": "Living Room",
+    "variant": "living_room",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "home_living_room.png",
+    "protagonist_position": "seated on couch left side",
+    "secondary_position": "",
+    "layout": "A living room with couch, side table, lamp, window, and low shelf with a few books.",
+    "composition": "Wide static living room, couch left of center, window right, open floor space.",
+    "props": ["couch", "side table", "lamp", "window", "bookshelf", "remote", "throw pillow"],
+    "reuse_tags": ["home", "relax", "scroll", "tv", "evening", "comfort"],
+    "example_actions": [
+      "The protagonist picks up the remote, presses it, then slumps deeper into the couch.",
+      "The protagonist reaches toward the side table for the phone and begins scrolling.",
+      "The protagonist sits upright with improved posture and places the remote down deliberately."
+    ]
+  },
+  {
+    "id": "home_kitchen",
+    "family": "home",
+    "title": "Kitchen",
+    "variant": "kitchen",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "home_kitchen.png",
+    "protagonist_position": "standing at kitchen counter center",
+    "secondary_position": "",
+    "layout": "A kitchen counter with cup, kettle, simple cabinets, fridge outline, and one stool.",
+    "composition": "Wide kitchen view, counter across middle, fridge on one side, upper cabinets minimal.",
+    "props": ["kitchen counter", "cup", "kettle", "cabinets", "fridge", "stool", "fruit bowl"],
+    "reuse_tags": ["home", "morning", "routine", "snack", "habit", "kitchen"],
+    "example_actions": [
+      "The protagonist opens the fridge, stares inside, and closes it without taking anything.",
+      "The protagonist pours from the kettle into the cup and wraps both hands around it.",
+      "The protagonist reaches into the fruit bowl, hesitates, and chooses a snack with a shrug."
+    ]
+  },
+  {
+    "id": "home_bedroom",
+    "family": "home",
+    "title": "Bedroom",
+    "variant": "bedroom",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "home_bedroom.png",
+    "protagonist_position": "lying in bed with head on pillow",
+    "secondary_position": "",
+    "layout": "A bedroom with bed, bedside table, alarm clock, lamp, and simple wardrobe outline.",
+    "composition": "Wide bedroom, bed centered, bedside table right, wardrobe left wall, window behind bed.",
+    "props": ["bed", "bedside table", "alarm clock", "lamp", "wardrobe", "window", "blanket"],
+    "reuse_tags": ["sleep", "morning", "snooze", "insomnia", "phone", "bed"],
+    "example_actions": [
+      "The protagonist reaches to silence the alarm clock and pulls the blanket over the head.",
+      "The protagonist sits up slowly, rubs eyes, and stares at the alarm clock.",
+      "The protagonist picks up the phone from the bedside table and scrolls while lying back."
+    ]
+  },
+  {
+    "id": "home_dining_room",
+    "family": "home",
+    "title": "Dining Room",
+    "variant": "dining_room",
+    "actor_count": 2,
+    "supporting_figures": 0,
+    "master_filename": "home_dining_room.png",
+    "protagonist_position": "left chair at dining table",
+    "secondary_position": "right chair at dining table",
+    "layout": "A dining table with two chairs, two place settings, simple window, and sideboard.",
+    "composition": "Wide dining room, table centered, window behind table, sideboard along wall.",
+    "props": ["dining table", "two chairs", "plates", "cups", "window", "sideboard", "simple vase"],
+    "reuse_tags": ["family", "conversation", "conflict", "meal", "home", "relationship"],
+    "example_actions": [
+      "The left figure speaks with a small hand gesture while the right figure listens with neutral posture.",
+      "The right figure pushes the plate away slightly while the left figure leans forward concerned.",
+      "Both figures eat in silence with eyes down, then the left figure attempts a small smile."
+    ]
+  },
+  {
+    "id": "home_home_office",
+    "family": "home",
+    "title": "Home Office Nook",
+    "variant": "home_office",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "home_home_office.png",
+    "protagonist_position": "seated at small desk facing laptop",
+    "secondary_position": "",
+    "layout": "A corner home office with small desk, laptop, bookshelf, desk lamp, and houseplant.",
+    "composition": "Compact room corner, desk against two walls, bookshelf above, clear chair space.",
+    "props": ["small desk", "laptop", "desk lamp", "bookshelf", "houseplant", "notebook", "chair"],
+    "reuse_tags": ["remote-work", "focus", "home", "procrastination", "deadline", "solo"],
+    "example_actions": [
+      "The protagonist types, pauses, and looks at the notebook with a tired expression.",
+      "The protagonist turns on the desk lamp and continues working with straighter posture.",
+      "The protagonist closes the laptop, exhales, and leans back in the chair."
+    ]
+  },
+  {
+    "id": "public_street_crosswalk",
+    "family": "public",
+    "title": "Street Crosswalk",
+    "variant": "crosswalk",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "public_street_crosswalk.png",
+    "protagonist_position": "standing at crosswalk edge",
+    "secondary_position": "",
+    "layout": "A simple street crosswalk with road lines, walk signal box, and sidewalk. One figure waits at the curb.",
+    "composition": "Wide street scene simplified, crosswalk in foreground, minimal building outlines far back.",
+    "props": ["crosswalk lines", "walk signal", "sidewalk", "road", "street sign", "bag"],
+    "reuse_tags": ["commute", "decision", "wait", "anxiety", "outside", "street"],
+    "example_actions": [
+      "The protagonist steps forward as if to cross, hesitates, and steps back to the curb.",
+      "The protagonist checks an imaginary watch posture and shifts the bag impatiently.",
+      "The protagonist crosses with confident stride and exits frame right."
+    ]
+  },
+  {
+    "id": "public_bus_stop",
+    "family": "public",
+    "title": "Bus Stop",
+    "variant": "bus_stop",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "public_bus_stop.png",
+    "protagonist_position": "seated on bench facing road",
+    "secondary_position": "",
+    "layout": "A bus stop bench, route sign, simple shelter post, and road line. One seated figure with a bag.",
+    "composition": "Wide roadside view, bench left, sign above, open road right.",
+    "props": ["bus stop bench", "route sign", "shelter post", "bag", "road", "trash bin"],
+    "reuse_tags": ["commute", "wait", "lateness", "phone", "outside", "transit"],
+    "example_actions": [
+      "The protagonist checks the route sign, slumps on the bench, and taps feet impatiently.",
+      "The protagonist pulls out a phone and scrolls while waiting.",
+      "The protagonist stands up quickly as if seeing the bus, then sits back down disappointed."
+    ]
+  },
+  {
+    "id": "public_coffee_shop_two",
+    "family": "public",
+    "title": "Coffee Shop Two People",
+    "variant": "coffee_shop_two",
+    "actor_count": 2,
+    "supporting_figures": 0,
+    "master_filename": "public_coffee_shop_two.png",
+    "protagonist_position": "left seat at small table",
+    "secondary_position": "right seat at small table",
+    "layout": "A small cafe table with two chairs, two cups, and a simple counter in the background.",
+    "composition": "Wide cafe interior, table centered, counter back wall, window side light.",
+    "props": ["small table", "two chairs", "two cups", "counter", "window", "menu board outline"],
+    "reuse_tags": ["conversation", "date", "interview", "friendship", "conflict", "coffee"],
+    "example_actions": [
+      "The left figure speaks with open hands while the right figure nods and lifts a cup.",
+      "The right figure looks down into the cup while the left figure waits with folded arms.",
+      "Both figures laugh with small upper-body movement, then settle back into neutral posture."
+    ]
+  },
+  {
+    "id": "public_park_bench",
+    "family": "public",
+    "title": "Park Bench",
+    "variant": "park_bench",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "public_park_bench.png",
+    "protagonist_position": "seated center on bench",
+    "secondary_position": "",
+    "layout": "A park bench on a simple path with two tree outlines and a trash bin.",
+    "composition": "Wide park scene, bench center, path behind, trees framing sides, open sky area.",
+    "props": ["park bench", "path", "trees", "trash bin", "birds outline", "bag"],
+    "reuse_tags": ["reflection", "break", "outside", "calm", "walk", "thinking"],
+    "example_actions": [
+      "The protagonist sits still, then slowly straightens posture and looks upward.",
+      "The protagonist opens a book, reads briefly, and closes it with a sigh.",
+      "The protagonist checks a phone, frowns, and places it face down on the bench."
+    ]
+  },
+  {
+    "id": "public_supermarket_aisle",
+    "family": "public",
+    "title": "Supermarket Aisle",
+    "variant": "supermarket_aisle",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "public_supermarket_aisle.png",
+    "protagonist_position": "standing with cart mid-aisle",
+    "secondary_position": "",
+    "layout": "A supermarket aisle with shelf lines, shopping cart, and a few simple product blocks.",
+    "composition": "One-point aisle perspective, figure with cart center, shelves both sides, ceiling lights simple.",
+    "props": ["shopping cart", "shelves", "product blocks", "price tag outlines", "floor tiles"],
+    "reuse_tags": ["shopping", "impulse", "money", "choice", "errand", "supermarket"],
+    "example_actions": [
+      "The protagonist reaches for a shelf item, hesitates, and puts it in the cart quickly.",
+      "The protagonist compares two shelf items by holding one in each hand.",
+      "The protagonist pushes the cart forward slowly while looking down with regret posture."
+    ]
+  },
+  {
+    "id": "public_supermarket_checkout",
+    "family": "public",
+    "title": "Supermarket Checkout",
+    "variant": "supermarket_checkout",
+    "actor_count": 1,
+    "supporting_figures": 1,
+    "master_filename": "public_supermarket_checkout.png",
+    "protagonist_position": "front of checkout conveyor",
+    "secondary_position": "",
+    "layout": "A checkout counter with conveyor belt, card reader, and one faint cashier figure behind counter.",
+    "composition": "Wide checkout lane, conveyor foreground, counter mid-frame, queue barrier simple.",
+    "props": ["checkout counter", "conveyor belt", "card reader", "shopping basket", "receipt slot", "queue barrier"],
+    "reuse_tags": ["money", "payment", "impulse", "regret", "shopping", "checkout"],
+    "example_actions": [
+      "The protagonist places items on the conveyor and opens a wallet with hesitant motion.",
+      "The protagonist taps the card reader, smiles briefly, then slumps as if seeing the total.",
+      "The protagonist removes one item from the basket and places it aside."
+    ]
+  },
+  {
+    "id": "public_elevator",
+    "family": "public",
+    "title": "Elevator",
+    "variant": "elevator",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "public_elevator.png",
+    "protagonist_position": "center facing elevator doors",
+    "secondary_position": "",
+    "layout": "Inside a simple elevator with button panel, mirror line, and floor indicator.",
+    "composition": "Tight elevator interior, figure center, doors front, panel right side.",
+    "props": ["elevator doors", "button panel", "floor indicator", "mirror line", "handrail"],
+    "reuse_tags": ["awkward", "silence", "commute", "work", "anxiety", "transit"],
+    "example_actions": [
+      "The protagonist presses a button, watches the floor indicator, and shifts weight nervously.",
+      "The protagonist checks reflection posture in the mirror line and straightens shoulders.",
+      "The protagonist exhales with relief as doors appear to open forward."
+    ]
+  },
+  {
+    "id": "education_classroom",
+    "family": "education",
+    "title": "Classroom",
+    "variant": "classroom",
+    "actor_count": 1,
+    "supporting_figures": 2,
+    "master_filename": "education_classroom.png",
+    "protagonist_position": "standing at front near board",
+    "secondary_position": "",
+    "layout": "A teacher figure at the front board with two faint student figures seated at desks.",
+    "composition": "Wide classroom, board back wall, three desk rows, teacher foreground left of board.",
+    "props": ["chalkboard", "teacher desk", "student desks", "chairs", "clock", "window", "books"],
+    "reuse_tags": ["teaching", "learning", "school", "explain", "attention", "classroom"],
+    "example_actions": [
+      "The teacher points at the board, then turns toward the students with an open palm.",
+      "The teacher writes one simple diagram line, pauses, and taps the board twice.",
+      "The teacher folds arms, listens posture, then nods and returns to the board."
+    ]
+  },
+  {
+    "id": "education_study_desk",
+    "family": "education",
+    "title": "Study Desk",
+    "variant": "study_desk",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "education_study_desk.png",
+    "protagonist_position": "seated at study desk center",
+    "secondary_position": "",
+    "layout": "A quiet study desk with stacked books, desk lamp, notebook, and cup in a library corner.",
+    "composition": "Medium-wide study nook, bookshelf behind, desk lamp lit, figure hunched over notebook.",
+    "props": ["study desk", "stacked books", "desk lamp", "notebook", "pen", "cup", "bookshelf"],
+    "reuse_tags": ["study", "exam", "focus", "learning", "overthinking", "school"],
+    "example_actions": [
+      "The protagonist writes in the notebook, stops, and presses pen to lips while thinking.",
+      "The protagonist flips through stacked books and slumps with overwhelmed posture.",
+      "The protagonist closes all books, sits upright, and opens one book with deliberate focus."
+    ]
+  },
+  {
+    "id": "health_waiting_room",
+    "family": "health",
+    "title": "Hospital Waiting Room",
+    "variant": "waiting_room",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "health_waiting_room.png",
+    "protagonist_position": "seated in waiting chair center",
+    "secondary_position": "",
+    "layout": "A waiting room with row of chairs, reception window, wall clock, and magazine table.",
+    "composition": "Wide waiting room, chairs along wall, reception window back left, clock above.",
+    "props": ["waiting chairs", "reception window", "wall clock", "magazine table", "water dispenser", "floor lines"],
+    "reuse_tags": ["anxiety", "waiting", "health", "appointment", "stress", "uncertainty"],
+    "example_actions": [
+      "The protagonist checks the wall clock repeatedly and taps the chair armrest.",
+      "The protagonist picks up a magazine, flips one page, and puts it down unread.",
+      "The protagonist stands when called, hesitates, and sits back down with nervous posture."
+    ]
+  },
+  {
+    "id": "health_consultation_room",
+    "family": "health",
+    "title": "Consultation Room",
+    "variant": "consultation",
+    "actor_count": 2,
+    "supporting_figures": 0,
+    "master_filename": "health_consultation_room.png",
+    "protagonist_position": "seated left on patient chair",
+    "secondary_position": "seated right behind desk as clinician",
+    "layout": "A consultation desk with two chairs, simple chart board, and examination bed outline in back.",
+    "composition": "Wide clinical room, desk between figures, chart board wall, bed along side wall.",
+    "props": ["consultation desk", "two chairs", "chart board", "examination bed", "clipboard", "wall clock"],
+    "reuse_tags": ["health", "conversation", "news", "anxiety", "trust", "consultation"],
+    "example_actions": [
+      "The patient leans forward with worried posture while the clinician gestures calmly to the chart board.",
+      "The clinician slides the clipboard forward and the patient nods slowly with tense shoulders.",
+      "The patient exhales, shoulders drop, and the clinician gives a small reassuring nod."
+    ]
+  },
+  {
+    "id": "fitness_gym_weights",
+    "family": "fitness",
+    "title": "Gym Weights Area",
+    "variant": "gym_weights",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "fitness_gym_weights.png",
+    "protagonist_position": "standing at weight bench center",
+    "secondary_position": "",
+    "layout": "A gym corner with weight bench, dumbbells, mirror line, and wall clock.",
+    "composition": "Wide gym area, bench center, mirror on wall, dumbbell rack side, open floor.",
+    "props": ["weight bench", "dumbbells", "mirror", "wall clock", "water bottle", "towel"],
+    "reuse_tags": ["gym", "habit", "motivation", "exercise", "skip", "health"],
+    "example_actions": [
+      "The protagonist lifts dumbbells with effort, then lowers them and bends forward tired.",
+      "The protagonist sits on the bench, looks at the clock, and stands up with renewed effort.",
+      "The protagonist wipes face with towel, drops shoulders, and walks away from the bench."
+    ]
+  },
+  {
+    "id": "fitness_gym_cardio",
+    "family": "fitness",
+    "title": "Gym Cardio Area",
+    "variant": "gym_cardio",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "fitness_gym_cardio.png",
+    "protagonist_position": "on treadmill center",
+    "secondary_position": "",
+    "layout": "A treadmill with simple control panel, wall clock, and water bottle on nearby shelf.",
+    "composition": "Wide cardio zone, treadmill centered, mirror line side wall, minimal equipment.",
+    "props": ["treadmill", "control panel", "wall clock", "water bottle", "towel hook", "mirror"],
+    "reuse_tags": ["gym", "cardio", "routine", "habit", "health", "exercise"],
+    "example_actions": [
+      "The protagonist jogs with steady rhythm, then slows the panel setting and exhales.",
+      "The protagonist starts hesitant, increases pace, and straightens posture gradually.",
+      "The protagonist stops treadmill, grabs water bottle, and leans on the rail catching breath."
+    ]
+  },
+  {
+    "id": "transit_train_seat",
+    "family": "transit",
+    "title": "Train Seat",
+    "variant": "train_seat",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "transit_train_seat.png",
+    "protagonist_position": "seated by window seat left side",
+    "secondary_position": "",
+    "layout": "A train interior with window seat, overhead rail, bag on lap, and simple aisle.",
+    "composition": "Wide train carriage slice, window left with passing lines, seat and figure center.",
+    "props": ["train seat", "window", "overhead rail", "bag", "phone", "aisle", "hand strap"],
+    "reuse_tags": ["commute", "travel", "phone", "thinking", "transit", "alone"],
+    "example_actions": [
+      "The protagonist watches the window lines pass, then looks down at the phone and scrolls.",
+      "The protagonist closes eyes and leans head against the window with tired posture.",
+      "The protagonist checks a phone notification and sits upright with alert posture."
+    ]
+  },
+  {
+    "id": "transit_commute_standing",
+    "family": "transit",
+    "title": "Standing Commute",
+    "variant": "commute_standing",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "transit_commute_standing.png",
+    "protagonist_position": "standing center holding overhead strap",
+    "secondary_position": "",
+    "layout": "A transit interior with overhead strap, poles, door outline, and floor lines.",
+    "composition": "Wide transit car, figure standing center, doors back, poles spaced evenly.",
+    "props": ["overhead strap", "support poles", "train doors", "floor lines", "bag", "route map outline"],
+    "reuse_tags": ["commute", "crowd-anxiety", "balance", "phone", "transit", "daily-routine"],
+    "example_actions": [
+      "The protagonist sways slightly with vehicle motion while gripping the strap.",
+      "The protagonist reaches for phone one-handed and loses balance slightly before recovering.",
+      "The protagonist shifts bag, straightens posture, and prepares to step toward the doors."
+    ]
+  },
+  {
+    "id": "retail_store_counter",
+    "family": "retail",
+    "title": "Retail Counter",
+    "variant": "store_counter",
+    "actor_count": 1,
+    "supporting_figures": 1,
+    "master_filename": "retail_store_counter.png",
+    "protagonist_position": "front of customer counter",
+    "secondary_position": "",
+    "layout": "A retail counter with product display, card reader, and faint clerk figure behind counter.",
+    "composition": "Wide shop counter view, products left, payment area center, clerk background right.",
+    "props": ["retail counter", "product display", "card reader", "shopping bag", "receipt printer", "price stand"],
+    "reuse_tags": ["shopping", "impulse", "money", "purchase", "regret", "retail"],
+    "example_actions": [
+      "The protagonist points at a product, hesitates, and places it back on the display.",
+      "The protagonist taps the card reader and smiles briefly, then frowns at the bag.",
+      "The protagonist opens wallet, counts invisible bills posture, and puts one item aside."
+    ]
+  },
+  {
+    "id": "public_outdoor_cafe_solo",
+    "family": "public",
+    "title": "Outdoor Cafe Solo",
+    "variant": "outdoor_cafe_solo",
+    "actor_count": 1,
+    "supporting_figures": 0,
+    "master_filename": "public_outdoor_cafe_solo.png",
+    "protagonist_position": "seated at outdoor table center",
+    "secondary_position": "",
+    "layout": "An outdoor cafe table with chair, cup, simple umbrella line, and sidewalk behind.",
+    "composition": "Wide outdoor seating, table center, umbrella pole, sidewalk and building line back.",
+    "props": ["outdoor table", "chair", "cup", "umbrella", "sidewalk", "planter", "menu stand"],
+    "reuse_tags": ["coffee", "break", "alone", "thinking", "phone", "outside"],
+    "example_actions": [
+      "The protagonist lifts the cup, sips, and gazes forward with reflective posture.",
+      "The protagonist pulls out a phone, scrolls, and sets the cup down forgotten.",
+      "The protagonist closes phone, sits upright, and writes one note in a small notebook."
+    ]
+  }
+]
