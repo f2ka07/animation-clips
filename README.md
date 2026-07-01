@@ -253,14 +253,28 @@ python batch_scene_clips.py --scene office_two_people_meeting --limit 1
 
 Clips save to `outputs/`, index in `data/scene_clips_index.json` and `data/clips_index.json` as `pending_review`. Approve with `python library.py --approve --title office_two_people_meeting_a0 --clip-category office`.
 
-**5. Stitch trial video (free, local ffmpeg):**
+**5. YouTube episodes (2–3 min format):**
 
 ```bash
-python stitch_video.py --preview
-python stitch_video.py --output outputs/trial_a_day_in_the_mind.mp4
+python stitch_video.py --list
+python stitch_video.py --recipe data/youtube/psychology_avoidance.json --preview
+python stitch_video.py --recipe data/youtube/psychology_avoidance.json
 ```
 
-Uses `data/trial_video.json` — all 30 scene clips in a day-in-the-life order (~150s).
+Recipes in `data/youtube/` include narration lines per clip. Output is **B-roll only** (~50s); add ~100s voiceover in your editor for a ~2:30 video.
+
+| Recipe | Topic |
+|--------|-------|
+| `psychology_avoidance.json` | Avoidance is not laziness |
+| `psychology_phone_distraction.json` | Phone distraction loop |
+| `psychology_social_anxiety.json` | Social anxiety before you arrive |
+| `psychology_impulse_spending.json` | Impulse spending |
+
+**Trial montage (all 30 scenes):**
+
+```bash
+python stitch_video.py --recipe data/trial_video.json --output outputs/trial_a_day_in_the_mind.mp4
+```
 
 ### Configurable request payload
 

@@ -18,17 +18,32 @@ from scene_clips import SceneClipStatus, find_scene_clip, load_scene_clips
 console = Console()
 
 
+YOUTUBE_RECIPES_DIR = config.CLIP_SPECS_PATH.parent / "youtube"
+
+
 class StitchClipRef(BaseModel):
     scene_id: str
     action_index: int = 0
+    beat: str = ""
+    narration: str = ""
 
 
 class StitchRecipe(BaseModel):
     id: str
     title: str
     description: str = ""
+    youtube_title: str = ""
+    thumbnail_scene: str = ""
     target_duration_seconds: int = 0
+    target_animation_seconds: int = 0
+    target_voiceover_seconds: int = 0
     clips: list[StitchClipRef]
+
+
+def list_youtube_recipes() -> list[Path]:
+    if not YOUTUBE_RECIPES_DIR.exists():
+        return []
+    return sorted(YOUTUBE_RECIPES_DIR.glob("*.json"))
 
 
 def load_stitch_recipe(path: Path) -> StitchRecipe:
@@ -119,13 +134,21 @@ def stitch_recipe(
 
 def preview_recipe(recipe: StitchRecipe) -> None:
     console.print(f"[bold]{recipe.title}[/bold]")
+    if recipe.youtube_title:
+        console.print(f"YouTube title: {recipe.youtube_title}")
     console.print(recipe.description)
+    if recipe.target_voiceover_seconds:
+        console.print(
+            f"Target: ~{recipe.target_animation_seconds}s animation + "
+            f"~{recipe.target_voiceover_seconds}s voiceover = "
+            f"~{recipe.target_duration_seconds}s total"
+        )
     console.print()
 
     table = Table(show_header=True, header_style="bold")
     table.add_column("#")
+    table.add_column("Beat")
     table.add_column("Scene")
-    table.add_column("File")
     table.add_column("Status")
 
     total_seconds = 0
@@ -135,14 +158,31 @@ def preview_recipe(recipe: StitchRecipe) -> None:
         if record and path:
             total_seconds += record.duration_seconds
             status = "ready"
-            file_label = path.name
         else:
             status = "[red]missing[/red]"
-            file_label = "-"
-        table.add_row(str(index), ref.scene_id, file_label, status)
+        table.add_row(str(index), ref.beat or "-", ref.scene_id, status)
+        if ref.narration:
+            console.print(f"  [{index}] {ref.narration}")
 
+    console.print()
     console.print(table)
-    console.print(f"Resolved duration: ~{total_seconds}s")
+    console.print(f"B-roll duration: ~{total_seconds}s (trim clips in editor to match voiceover)")
+
+
+def print_recipe_list() -> None:
+    recipes = list_youtube_recipes()
+    if not recipes:
+        console.print("[yellow]No recipes in data/youtube/[/yellow]")
+        return
+
+    table = Table(show_header=True, header_style="bold")
+    table.add_column("File")
+    table.add_column("Title")
+    table.add_column("Clips")
+    for path in recipes:
+        recipe = load_stitch_recipe(path)
+        table.add_row(path.name, recipe.title, str(len(recipe.clips)))
+    console.print(table)
 
 
 def parse_args() -> argparse.Namespace:
@@ -150,7 +190,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--recipe",
         type=Path,
-        default=config.CLIP_SPECS_PATH.parent / "trial_video.json",
+        help="Recipe JSON (default: data/youtube/psychology_avoidance.json)",
+    )
+    parser.add_argument(
+        "--list",
+        action="store_true",
+        help="List YouTube recipes in data/youtube/",
     )
     parser.add_argument(
         "--output",
@@ -168,23 +213,37 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    recipe = load_stitch_recipe(args.recipe)
+
+    if args.list:
+        print_recipe_list()
+        return
+
+    recipe_path = args.recipe or (YOUTUBE_RECIPES_DIR / "psychology_avoidance.json")
+    recipe = load_stitch_recipe(recipe_path)
 
     if args.preview:
         preview_recipe(recipe)
         return
 
+    output_path = args.output
+    if output_path is None and recipe.id.startswith("psychology_"):
+        output_path = config.OUTPUT_DIR / f"{recipe.id}_broll.mp4"
+
     try:
         output = stitch_recipe(
             recipe,
-            args.output,
+            output_path,
             require_all=not args.allow_missing,
         )
     except Exception as exc:
         console.print(f"[red]Stitch failed:[/red] {exc}")
         sys.exit(1)
 
-    console.print(f"[green]Trial video saved:[/green] {output}")
+    console.print(f"[green]B-roll saved:[/green] {output}")
+    console.print(
+        "[dim]Next: record voiceover in CapCut/DaVinci using the narration lines from "
+        f"{recipe_path.name}, trim clips to your words.[/dim]"
+    )
 
 
 if __name__ == "__main__":

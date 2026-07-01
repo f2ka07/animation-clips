@@ -1,0 +1,72 @@
+{
+  "id": "psychology_avoidance",
+  "title": "The Psychology of Avoidance (It's Not Laziness)",
+  "description": "YouTube episode: one idea, 10 clips, ~50s B-roll + voiceover to ~2:30.",
+  "youtube_title": "The Psychology of Avoidance (It's Not Laziness)",
+  "thumbnail_scene": "office_desk_close",
+  "target_duration_seconds": 150,
+  "target_animation_seconds": 50,
+  "target_voiceover_seconds": 100,
+  "clips": [
+    {
+      "scene_id": "office_desk_close",
+      "action_index": 0,
+      "beat": "hook",
+      "narration": "You are not lazy. Your brain is avoiding a feeling, not a task."
+    },
+    {
+      "scene_id": "public_street_crosswalk",
+      "action_index": 0,
+      "beat": "pause",
+      "narration": "Avoidance often starts as a tiny pause. Step forward, then step back."
+    },
+    {
+      "scene_id": "office_hallway",
+      "action_index": 0,
+      "beat": "pause",
+      "narration": "You walk toward what matters, then stop at the door."
+    },
+    {
+      "scene_id": "home_bedroom",
+      "action_index": 0,
+      "beat": "escape",
+      "narration": "The alarm rings. Relief wins for five more minutes."
+    },
+    {
+      "scene_id": "home_living_room",
+      "action_index": 0,
+      "beat": "escape",
+      "narration": "The couch is not rest. It is a hiding place with a remote."
+    },
+    {
+      "scene_id": "home_kitchen",
+      "action_index": 0,
+      "beat": "escape",
+      "narration": "You open the fridge looking for a feeling, not food."
+    },
+    {
+      "scene_id": "office_single_worker",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "You sit down to work, then freeze. Thinking becomes another delay."
+    },
+    {
+      "scene_id": "home_home_office",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "Tired eyes on the notebook. The task is still waiting."
+    },
+    {
+      "scene_id": "public_supermarket_checkout",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "Even small choices get heavy when you are already drained."
+    },
+    {
+      "scene_id": "public_park_bench",
+      "action_index": 0,
+      "beat": "close",
+      "narration": "Avoidance is not a character flaw. It is a pattern. Name it, then take one small step back in."
+    }
+  ]
+}

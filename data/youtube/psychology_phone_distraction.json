@@ -1,0 +1,72 @@
+{
+  "id": "psychology_phone_distraction",
+  "title": "The Psychology of Phone Distraction",
+  "description": "Why the phone wins when focus gets uncomfortable.",
+  "youtube_title": "The Psychology of Phone Distraction",
+  "thumbnail_scene": "office_desk_close",
+  "target_duration_seconds": 150,
+  "target_animation_seconds": 50,
+  "target_voiceover_seconds": 100,
+  "clips": [
+    {
+      "scene_id": "office_desk_close",
+      "action_index": 0,
+      "beat": "hook",
+      "narration": "Your hand moves toward the phone before you decide to."
+    },
+    {
+      "scene_id": "office_single_worker",
+      "action_index": 0,
+      "beat": "setup",
+      "narration": "The laptop is open. The work is right there. Something still feels heavy."
+    },
+    {
+      "scene_id": "home_home_office",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "You tell yourself one quick check. The screen becomes the whole room."
+    },
+    {
+      "scene_id": "transit_train_seat",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "Every idle moment gets filled. Waiting becomes scrolling."
+    },
+    {
+      "scene_id": "office_open_plan",
+      "action_index": 0,
+      "beat": "social",
+      "narration": "Everyone else looks busy. Your phone becomes a shield."
+    },
+    {
+      "scene_id": "public_bus_stop",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "Discomfort arrives. The phone offers instant relief."
+    },
+    {
+      "scene_id": "home_bedroom",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "At night the loop gets louder. Sleep waits while the feed does not."
+    },
+    {
+      "scene_id": "home_living_room",
+      "action_index": 0,
+      "beat": "escape",
+      "narration": "The couch, the remote, the scroll. One continuous dodge."
+    },
+    {
+      "scene_id": "education_study_desk",
+      "action_index": 0,
+      "beat": "cost",
+      "narration": "Focus was the goal. The phone traded it for a hit of ease."
+    },
+    {
+      "scene_id": "public_park_bench",
+      "action_index": 0,
+      "beat": "close",
+      "narration": "Distraction is not weakness. It is your nervous system reaching for relief. Put the phone down for one breath, then one line of work."
+    }
+  ]
+}

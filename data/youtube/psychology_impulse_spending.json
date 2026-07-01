@@ -1,0 +1,72 @@
+{
+  "id": "psychology_impulse_spending",
+  "title": "The Psychology of Impulse Spending",
+  "description": "Quick reward, brief relief, quiet regret.",
+  "youtube_title": "The Psychology of Impulse Spending",
+  "thumbnail_scene": "public_supermarket_aisle",
+  "target_duration_seconds": 150,
+  "target_animation_seconds": 50,
+  "target_voiceover_seconds": 100,
+  "clips": [
+    {
+      "scene_id": "public_supermarket_aisle",
+      "action_index": 0,
+      "beat": "hook",
+      "narration": "Your hand is in the cart before the decision feels real."
+    },
+    {
+      "scene_id": "retail_store_counter",
+      "action_index": 0,
+      "beat": "temptation",
+      "narration": "You point, hesitate, then reach anyway."
+    },
+    {
+      "scene_id": "public_supermarket_checkout",
+      "action_index": 0,
+      "beat": "payment",
+      "narration": "The wallet opens with a flutter of doubt."
+    },
+    {
+      "scene_id": "home_kitchen",
+      "action_index": 0,
+      "beat": "mood",
+      "narration": "A hard day makes small treats feel like medicine."
+    },
+    {
+      "scene_id": "office_single_worker",
+      "action_index": 0,
+      "beat": "stress",
+      "narration": "Stress narrows the future to the next five minutes."
+    },
+    {
+      "scene_id": "home_living_room",
+      "action_index": 0,
+      "beat": "reward",
+      "narration": "You buy the feeling of relief, not the object."
+    },
+    {
+      "scene_id": "transit_train_seat",
+      "action_index": 0,
+      "beat": "loop",
+      "narration": "One tap while bored. One tap while anxious. The pattern repeats."
+    },
+    {
+      "scene_id": "public_outdoor_cafe_solo",
+      "action_index": 0,
+      "beat": "pause",
+      "narration": "For a moment it works. Then the bill arrives inside your head."
+    },
+    {
+      "scene_id": "home_home_office",
+      "action_index": 0,
+      "beat": "regret",
+      "narration": "Back at the desk, the purchase does not fix what hurt."
+    },
+    {
+      "scene_id": "public_park_bench",
+      "action_index": 0,
+      "beat": "close",
+      "narration": "Impulse spending is often emotion spending. Pause at the shelf. Name the feeling. Decide twice."
+    }
+  ]
+}

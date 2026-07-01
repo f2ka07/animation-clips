@@ -1,0 +1,72 @@
+{
+  "id": "psychology_social_anxiety",
+  "title": "Why Social Situations Feel Hard",
+  "description": "Anticipation, judgment, and small moments of social pressure.",
+  "youtube_title": "The Psychology of Social Anxiety (Before You Even Arrive)",
+  "thumbnail_scene": "health_waiting_room",
+  "target_duration_seconds": 150,
+  "target_animation_seconds": 50,
+  "target_voiceover_seconds": 100,
+  "clips": [
+    {
+      "scene_id": "health_waiting_room",
+      "action_index": 0,
+      "beat": "hook",
+      "narration": "Nothing has happened yet. Your body already acts like it has."
+    },
+    {
+      "scene_id": "office_reception",
+      "action_index": 0,
+      "beat": "anticipation",
+      "narration": "You check the clock. You rehearse what you will say."
+    },
+    {
+      "scene_id": "public_elevator",
+      "action_index": 0,
+      "beat": "anticipation",
+      "narration": "A small closed space. Every second feels watched."
+    },
+    {
+      "scene_id": "public_street_crosswalk",
+      "action_index": 0,
+      "beat": "hesitation",
+      "narration": "You step forward, then pull back. Approach and retreat."
+    },
+    {
+      "scene_id": "public_coffee_shop_two",
+      "action_index": 0,
+      "beat": "interaction",
+      "narration": "A simple conversation carries hidden stakes."
+    },
+    {
+      "scene_id": "office_two_people_meeting",
+      "action_index": 0,
+      "beat": "interaction",
+      "narration": "Eye contact becomes evidence. Every gesture feels loud."
+    },
+    {
+      "scene_id": "home_dining_room",
+      "action_index": 0,
+      "beat": "tension",
+      "narration": "Even people who care can feel like an audience."
+    },
+    {
+      "scene_id": "office_hallway",
+      "action_index": 0,
+      "beat": "avoidance",
+      "narration": "Sometimes you stop before the door because showing up feels risky."
+    },
+    {
+      "scene_id": "education_classroom",
+      "action_index": 0,
+      "beat": "judgment",
+      "narration": "Being seen while learning can feel like being tested as a person."
+    },
+    {
+      "scene_id": "public_park_bench",
+      "action_index": 0,
+      "beat": "close",
+      "narration": "Social anxiety is often fear of judgment, not fear of people. Arrive anyway. One honest hello is enough."
+    }
+  ]
+}
