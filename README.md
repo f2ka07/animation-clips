@@ -15,7 +15,7 @@ generate_clip.py
  Runpod    Fal   Local   (future providers)
 ```
 
-The application does not hardcode Runpod or WAN. `generate_clip.py` calls `create_video_provider()`, which loads the provider named in `.env`. Today `PROVIDER=runpod` is supported. Future providers (Fal, Replicate, local GPU, etc.) plug in without changing the CLI or library code.
+Each provider is self-contained under `providers/`. HTTP transport, polling, and response parsing for Runpod live in `providers/runpod.py`. Future providers such as `providers/fal.py` or `providers/local.py` follow the same pattern with no shared client layer.
 
 Model selection is also configuration-only:
 
@@ -359,10 +359,9 @@ wan-stick-clips/
 ├── README.md
 ├── config.py
 ├── providers/
-│   ├── __init__.py
-│   ├── base.py
-│   └── runpod.py
-├── runpod_client.py
+│   ├── __init__.py      # create_video_provider()
+│   ├── base.py          # VideoProvider interface
+│   └── runpod.py        # Runpod HTTP transport + generation
 ├── prompts.py
 ├── generate_clip.py
 ├── batch_generate.py
