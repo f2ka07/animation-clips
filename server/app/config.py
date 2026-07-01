@@ -24,11 +24,11 @@ def _bool(name: str, default: bool) -> bool:
 
 
 WAN_ROOT: Path = Path(_str("WAN_ROOT", "/opt/wan"))
-WAN_TASK: str = _str("WAN_TASK", "t2v-A14B")
-WAN_CKPT_DIR: Path = Path(_str("WAN_CKPT_DIR", "/models/Wan2.2-T2V-A14B"))
+WAN_TASK: str = _str("WAN_TASK", "ti2v-5B")
+WAN_CKPT_DIR: Path = Path(_str("WAN_CKPT_DIR", "/models/Wan2.2-TI2V-5B"))
 WAN_OFFLOAD_MODEL: bool = _bool("WAN_OFFLOAD_MODEL", True)
 WAN_CONVERT_MODEL_DTYPE: bool = _bool("WAN_CONVERT_MODEL_DTYPE", True)
-WAN_T5_CPU: bool = _bool("WAN_T5_CPU", False)
+WAN_T5_CPU: bool = _bool("WAN_T5_CPU", True)
 WAN_DEFAULT_SIZE: str = _str("WAN_DEFAULT_SIZE", "832*480")
 
 OUTPUT_DIR: Path = Path(_str("OUTPUT_DIR", "/data/videos"))

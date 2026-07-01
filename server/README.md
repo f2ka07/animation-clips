@@ -2,7 +2,53 @@
 
 Self-hosted FastAPI service built around the [official Wan 2.2 repository](https://github.com/Wan-Video/Wan2.2). It exposes a stable REST API that matches the `wan-stick-clips` CLI `.env` contract, so you are not tied to community Docker images such as `docker.io/antilopax/wan22:v43`.
 
-The CLI app is not dockerized. Only the GPU inference server runs in Docker on AWS (EC2, ECS, etc.).
+The CLI app is not dockerized. Only the GPU inference server runs in Docker on AWS EC2.
+
+## AWS EC2 g5.xlarge (recommended)
+
+This project is tuned for **g5.xlarge**:
+
+| Resource | g5.xlarge |
+|----------|-----------|
+| GPU | 1x NVIDIA A10G (24 GB VRAM) |
+| vCPU | 4 |
+| RAM | 16 GB |
+
+**Recommended model:** `Wan2.2-TI2V-5B` with `WAN_T5_CPU=true`. It fits the A10G at `832*480` for 5-second stick-figure clips. `T2V-A14B` is too large for reliable inference on 24 GB VRAM.
+
+### EC2 setup checklist
+
+1. Launch **g5.xlarge** with a Deep Learning AMI (Ubuntu) or install NVIDIA drivers + Docker + [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+2. Open inbound **TCP 8000** in the instance security group (or put an ALB in front).
+3. Clone this repo on the instance and build the server image from `server/`.
+4. Download TI2V-5B weights (see below).
+5. Set `PUBLIC_BASE_URL` to the instance public DNS on port 8000.
+
+```bash
+# On the g5.xlarge instance
+cd server
+cp .env.example .env
+# Edit PUBLIC_BASE_URL to your instance DNS
+
+docker build -t wan-stick-server .
+
+mkdir -p models
+pip install huggingface_hub
+huggingface-cli download Wan-AI/Wan2.2-TI2V-5B --local-dir ./models/Wan2.2-TI2V-5B
+
+docker run --gpus all \
+  -p 8000:8000 \
+  --env-file .env \
+  -v $(pwd)/models:/models \
+  -v $(pwd)/videos:/data/videos \
+  wan-stick-server
+```
+
+Verify:
+
+```bash
+curl http://localhost:8000/health
+```
 
 ## API contract
 
@@ -70,29 +116,31 @@ docker build --build-arg WAN_GIT_REF=<commit-sha> -t wan-stick-server .
 
 ## Download model weights
 
-Weights are not bundled in the image. On your GPU host:
+Weights are not bundled in the image. On your **g5.xlarge** host, download TI2V-5B (default):
 
 ```bash
 mkdir -p models
 pip install huggingface_hub
-huggingface-cli download Wan-AI/Wan2.2-T2V-A14B --local-dir ./models/Wan2.2-T2V-A14B
-```
-
-For smaller GPUs:
-
-```bash
 huggingface-cli download Wan-AI/Wan2.2-TI2V-5B --local-dir ./models/Wan2.2-TI2V-5B
 ```
 
-Then set in `.env`:
+`.env.example` already points at this model. No changes needed unless you move to a larger GPU instance.
+
+For **g5.2xlarge or larger** (still 24 GB A10G per GPU, but more system RAM), the same TI2V-5B settings apply. For multi-GPU instances with 40 GB+ VRAM (for example g5.12xlarge), you may try T2V-A14B:
+
+```bash
+huggingface-cli download Wan-AI/Wan2.2-T2V-A14B --local-dir ./models/Wan2.2-T2V-A14B
+```
 
 ```
-WAN_TASK=ti2v-5B
-WAN_CKPT_DIR=/models/Wan2.2-TI2V-5B
+WAN_TASK=t2v-A14B
+WAN_CKPT_DIR=/models/Wan2.2-T2V-A14B
 WAN_T5_CPU=true
 ```
 
 ## Run on AWS EC2 (GPU)
+
+On **g5.xlarge**, use the command from the setup checklist above. Generic form:
 
 ```bash
 docker run --gpus all \

@@ -31,7 +31,7 @@ Switching to `wan3`, `hunyuanvideo`, `ltx`, or another family is an `.env` chang
 ## Requirements
 
 - Python 3.11
-- An AWS GPU host running a WAN 2.2 or WAN 2.6 T2V compatible REST API, or a SageMaker endpoint
+- An AWS **EC2 g5.xlarge** (or similar GPU instance) running the `server/` Wan 2.2 container
 
 ## Quick start
 
@@ -67,14 +67,15 @@ See **[server/README.md](server/README.md)** for build and deploy steps.
 
 Summary:
 
-1. Build the Docker image from `server/`.
-2. Download official Wan weights to the GPU host.
-3. Run the container on AWS EC2 with GPU.
-4. Point the CLI `.env` at the server host.
+1. Launch an **EC2 g5.xlarge** GPU instance.
+2. Build the Docker image from `server/`.
+3. Download **Wan2.2-TI2V-5B** weights (fits the A10G 24 GB GPU).
+4. Run the container on the instance.
+5. Point the CLI `.env` at the instance public DNS.
 
 **Note:** ComfyUI templates are allowed only for manual visual testing. This production stack uses our FastAPI server around official Wan 2.2 inference.
 
-### REST mode (default) - EC2 with our Wan server
+### REST mode (default) - g5.xlarge with our Wan server
 
 Set in `.env`:
 
