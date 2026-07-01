@@ -94,6 +94,7 @@ def generate_clip(
         duration_seconds=resolved_duration,
         setting=setting,
         background=background,
+        character_description=config.CHARACTER_DESCRIPTION or None,
     )
     negative_prompt = NEGATIVE_PROMPT
     resolved_seed = config.SEED if seed is None else seed

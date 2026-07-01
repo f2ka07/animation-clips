@@ -382,7 +382,34 @@ python library.py --reject --title "Bad Take" --clip-category procrastination
 
 Only **approved** clips are used when resolving recipes (`compose_recipe.py`). Pending or rejected clips show as yellow/red in the recipe table.
 
-### RunPod MiniMax Hailuo (matches `D:\VideoApp\API`)
+### 4. Character consistency (same protagonist every clip)
+
+MiniMax Hailuo is text-to-video only — it cannot lock a pixel-perfect character like a reference image. Consistency comes from **locked language** plus **human review**.
+
+**Every prompt now includes a Character block**, for example:
+
+```
+Character: The same stick figure protagonist in every clip: simple round head,
+two dot eyes, one short curved mouth line, straight stick limbs, three-finger hands,
+same body proportions and black ink line weight, no hair, no clothes detail, no nose, no ears.
+```
+
+Actions are normalized to say **"The same stick figure protagonist"** instead of "a stick figure".
+
+**Your workflow:**
+
+1. Generate one clip and approve it when the look is right (`library.py --approve`).
+2. Treat that MP4 as the **golden reference** — reject any clip where the figure drifts (different head, limbs, line weight, or expression style).
+3. Keep `--setting` / Background blocks stable per location (office, bed, desk).
+4. Never enable `enable_prompt_expansion` for stick clips.
+5. Optional: override the character wording in `.env` if you refine it after a good clip:
+
+```env
+CHARACTER_DESCRIPTION=The same stick figure protagonist: round head, dot eyes, thin curved mouth, equal-length limbs, black ink only, no hair or clothes.
+```
+
+**What you cannot rely on with this API:** fixed seed, reference image, or first-frame conditioning. Reject-and-regenerate is the quality gate.
+
 
 Put `RUNPOD_API_KEY` in `D:\VideoApp\.env` (loaded automatically) or `wan-stick-clips/.env`:
 

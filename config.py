@@ -96,6 +96,7 @@ MINIMAX_HAILUO_ENABLE_PROMPT_EXPANSION: bool = _bool_env(
 MINIMAX_HAILUO_EXPANSION_FIELD: str = _str_env(
     "MINIMAX_HAILUO_EXPANSION_FIELD", "enable_prompt_expansion"
 )
+CHARACTER_DESCRIPTION: str = _str_env("CHARACTER_DESCRIPTION", "")
 SERVERLESS_BASE_URL: str = _str_env(
     "SERVERLESS_BASE_URL", "https://api.runpod.ai/v2"
 ).rstrip("/")

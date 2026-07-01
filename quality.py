@@ -58,6 +58,11 @@ def preflight_clip(
             "Consider Background + Action format for visual consistency across clips."
         )
 
+    if "character:" not in lowered:
+        report.warnings.append(
+            "Prompt has no Character block; use the default channel protagonist wording."
+        )
+
     if action.count(".") > 4:
         report.warnings.append("Too many sentences in action; simplify to one beat.")
 

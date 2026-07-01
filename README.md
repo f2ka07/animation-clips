@@ -307,6 +307,16 @@ python compose_recipe.py --recipe why_we_procrastinate
 
 `compose_recipe.py` shows `pending_review` in yellow and only stitches **approved** clips.
 
+### Character consistency
+
+Every prompt includes a locked **Character:** block (round head, dot eyes, stick limbs, same line weight). Actions are rewritten to **"The same stick figure protagonist"**. Approve clips that match your golden look; reject drift. Optional override in `.env`:
+
+```env
+CHARACTER_DESCRIPTION=Your refined protagonist wording after you approve a golden clip.
+```
+
+MiniMax Hailuo has no reference-image or seed control in this API — language + review is the standard.
+
 ## Generate batch clips
 
 `data/clip_specs.json` contains 20 starter psychology clips.

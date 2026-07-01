@@ -66,7 +66,15 @@ NEGATIVE_PROMPT = (
     "photorealistic, 3d render, anime, cartoon character, detailed face, complex background, "
     "color, text, subtitles, watermark, logo, distorted body, extra limbs, extra fingers, "
     "broken anatomy, flickering, blurry, camera shake, fast cuts, messy scene, over detailed, "
-    "crowd, city street, restaurant, party, classroom, multiple rooms, scene change"
+    "crowd, city street, restaurant, party, classroom, multiple rooms, scene change, "
+    "different character design, hair, clothes, shaded face, realistic human"
+)
+
+# Channel protagonist — same wording in every clip prompt.
+DEFAULT_CHARACTER_DESCRIPTION = (
+    "The same stick figure protagonist in every clip: simple round head, two dot eyes, "
+    "one short curved mouth line, straight stick limbs, three-finger hands, same body "
+    "proportions and black ink line weight, no hair, no clothes detail, no nose, no ears."
 )
 
 
@@ -74,6 +82,11 @@ def normalize_duration(duration_seconds: int | None) -> int:
     if duration_seconds is None:
         return CLIP_DURATION_MIN
     return max(CLIP_DURATION_MIN, min(CLIP_DURATION_MAX, duration_seconds))
+
+
+def build_character_block(character_description: str | None = None) -> str:
+    text = (character_description or DEFAULT_CHARACTER_DESCRIPTION).strip()
+    return f"Character: {text}"
 
 
 def build_style_prefix(duration_seconds: int | None = None) -> str:
@@ -103,20 +116,36 @@ def build_prompt(
     *,
     setting: str | None = None,
     background: str | None = None,
+    character_description: str | None = None,
 ) -> str:
     style = build_style_prefix(duration_seconds)
-    action = action_prompt.strip()
+    character = build_character_block(character_description)
+    action = normalize_action_subject(action_prompt.strip())
     bg = build_background(setting=setting, background=background)
     if bg:
-        return f"{style} Background: {bg} Action: {action}"
-    return f"{style} {action}"
+        return f"{style} {character} Background: {bg} Action: {action}"
+    return f"{style} {character} Action: {action}"
+
+
+def normalize_action_subject(action: str) -> str:
+    """Use the channel protagonist phrasing when the action names a generic figure."""
+    lowered = action.lower()
+    replacements = (
+        ("a stick figure ", "The same stick figure protagonist "),
+        ("stick figure ", "The same stick figure protagonist "),
+        ("the stick figure ", "The same stick figure protagonist "),
+    )
+    for old, new in replacements:
+        if lowered.startswith(old):
+            return new + action[len(old) :]
+    return action
 
 
 def build_action(
     *,
     setting: str,
     beat: str,
-    subject: str = "A stick figure",
+    subject: str = "The same stick figure protagonist",
     props: list[str] | None = None,
     motion: str = "",
     emotion_change: str = "",
