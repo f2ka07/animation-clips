@@ -274,6 +274,29 @@ Batch behavior:
 - Continues even if one clip fails
 - Writes failures to `logs/batch_failures_<timestamp>.json`
 
+## Clip scripting (5–10 second reusable atoms)
+
+Clips are designed to be **stitched into longer videos**. See [PROMPT.md](PROMPT.md) for the full scripting system.
+
+**Build a new script entry:**
+
+```bash
+python script_builder.py --title "Morning Snooze" --category habit --tags "sleep,morning,bed" --setting bed --beat trigger --motion "An alarm clock appears. The figure reaches to turn it off and pulls the blanket back up." --emotion-change "The figure curls back into bed."
+```
+
+**Plan a video from existing clips:**
+
+```bash
+python compose_recipe.py --list
+python compose_recipe.py --recipe why_we_procrastinate
+```
+
+**Per-clip duration (5–10 seconds):**
+
+```bash
+python generate_clip.py --title "..." --category "..." --tags "..." --duration 10 --action "..."
+```
+
 ## Search the library
 
 ```bash

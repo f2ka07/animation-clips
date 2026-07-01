@@ -22,6 +22,9 @@ class ClipSpec(BaseModel):
     category: str
     tags: list[str]
     action: str
+    duration_seconds: int = 5
+    beat: str = ""
+    setting: str = ""
 
 
 class BatchFailure(BaseModel):
@@ -62,6 +65,7 @@ def run_batch(specs_path: Path | None = None) -> list[BatchFailure]:
                     category=spec.category,
                     tags=spec.tags,
                     action=spec.action,
+                    duration_seconds=spec.duration_seconds,
                 )
                 console.print(
                     f"[green]Completed:[/green] {record.title} -> {record.filename}"

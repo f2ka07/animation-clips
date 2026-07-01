@@ -12,7 +12,7 @@ from library import (
     find_failed_by_title_category,
     update_clip,
 )
-from prompts import NEGATIVE_PROMPT, build_prompt
+from prompts import NEGATIVE_PROMPT, build_prompt, normalize_duration
 from providers import VideoProviderError, create_video_provider
 
 console = Console()
@@ -35,6 +35,12 @@ def parse_args() -> argparse.Namespace:
         help="Scene action description for the stick figure animation",
     )
     parser.add_argument(
+        "--duration",
+        type=int,
+        default=config.DURATION,
+        help="Clip duration in seconds (5-10)",
+    )
+    parser.add_argument(
         "--seed",
         type=int,
         default=config.SEED,
@@ -53,8 +59,12 @@ def generate_clip(
     tags: list[str],
     action: str,
     seed: int | None = None,
+    duration_seconds: int | None = None,
 ) -> ClipRecord:
-    prompt = build_prompt(action)
+    resolved_duration = normalize_duration(
+        config.DURATION if duration_seconds is None else duration_seconds
+    )
+    prompt = build_prompt(action, duration_seconds=resolved_duration)
     negative_prompt = NEGATIVE_PROMPT
     resolved_seed = config.SEED if seed is None else seed
 
@@ -76,7 +86,7 @@ def generate_clip(
             tags=tags,
             prompt=prompt,
             negative_prompt=negative_prompt,
-            duration_seconds=config.DURATION,
+            duration_seconds=resolved_duration,
             width=config.WIDTH,
             height=config.HEIGHT,
             fps=config.FPS,
@@ -94,6 +104,7 @@ def generate_clip(
         prompt=prompt,
         negative_prompt=negative_prompt,
         seed=resolved_seed,
+        duration_seconds=resolved_duration,
     )
 
     provider = create_video_provider()
@@ -124,6 +135,7 @@ def main() -> None:
             tags=tags,
             action=args.action,
             seed=args.seed,
+            duration_seconds=args.duration,
         )
     except Exception as exc:
         console.print(f"[red]Generation failed:[/red] {exc}")

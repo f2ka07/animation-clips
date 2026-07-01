@@ -1,0 +1,46 @@
+[
+  {
+    "id": "why_we_procrastinate",
+    "title": "Why We Procrastinate",
+    "description": "Setup distraction, loop, then deadline panic.",
+    "target_duration_seconds": 20,
+    "clips": [
+      {"title": "Avoiding Work", "category": "procrastination"},
+      {"title": "Phone Distraction", "category": "attention"},
+      {"title": "Deadline Panic", "category": "procrastination"}
+    ]
+  },
+  {
+    "id": "anxiety_before_social_event",
+    "title": "Anxiety Before a Social Event",
+    "description": "Overthink, fear judgment, then small confidence shift.",
+    "target_duration_seconds": 20,
+    "clips": [
+      {"title": "Overthinking Message", "category": "anxiety"},
+      {"title": "Fear of Judgment", "category": "social_pressure"},
+      {"title": "Confidence Shift", "category": "habit"}
+    ]
+  },
+  {
+    "id": "habit_break_attempt",
+    "title": "Trying to Break a Habit",
+    "description": "Trigger, resistance attempt, relapse loop.",
+    "target_duration_seconds": 20,
+    "clips": [
+      {"title": "Habit Trigger", "category": "habit"},
+      {"title": "Temptation Resistance", "category": "habit"},
+      {"title": "Social Media Loop", "category": "attention"}
+    ]
+  },
+  {
+    "id": "money_regret_arc",
+    "title": "Impulse Spending Regret",
+    "description": "Impulse buy, short reward, regret after choice.",
+    "target_duration_seconds": 20,
+    "clips": [
+      {"title": "Impulse Buying", "category": "money"},
+      {"title": "Reward Loop", "category": "reward_loop"},
+      {"title": "Regret After Choice", "category": "decision_making"}
+    ]
+  }
+]

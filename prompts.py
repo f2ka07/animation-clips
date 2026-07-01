@@ -1,17 +1,147 @@
-STYLE_PREFIX = (
-    "Minimalist hand drawn stick figure animation on an off white paper texture background. "
-    "Black ink line art, simple expressive stick figures, clean educational psychology "
-    "documentary style, smooth motion, consistent character proportions, subtle sketch "
-    "imperfections, no text, no subtitles, no logos, no watermark, no color, no shading, "
-    "fixed camera, 5 second clip."
+"""Prompt and action builders for consistent, stitchable stick-figure clips."""
+
+CLIP_DURATION_MIN = 5
+CLIP_DURATION_MAX = 10
+
+BEAT_TYPES = (
+    "setup",
+    "trigger",
+    "reaction",
+    "loop",
+    "choice",
+    "relief",
+    "regret",
+    "reset",
+)
+
+EVERYDAY_SETTINGS = (
+    "desk",
+    "bed",
+    "kitchen counter",
+    "couch",
+    "doorway",
+    "chair",
+    "bus stop",
+    "hallway",
+    "bathroom mirror",
+    "grocery aisle",
+)
+
+ALLOWED_PROPS = (
+    "phone",
+    "clock",
+    "notebook",
+    "book",
+    "cup",
+    "door",
+    "chair",
+    "box",
+    "arrow",
+    "circle",
+    "thought bubble",
+    "speech bubble",
+    "checklist",
+    "wallet",
+    "keys",
+    "laptop",
+    "bag",
 )
 
 NEGATIVE_PROMPT = (
     "photorealistic, 3d render, anime, cartoon character, detailed face, complex background, "
     "color, text, subtitles, watermark, logo, distorted body, extra limbs, extra fingers, "
-    "broken anatomy, flickering, blurry, camera shake, fast cuts, messy scene, over detailed"
+    "broken anatomy, flickering, blurry, camera shake, fast cuts, messy scene, over detailed, "
+    "crowd, city street, restaurant, party, classroom, multiple rooms, scene change"
 )
 
 
-def build_prompt(action_prompt: str) -> str:
-    return f"{STYLE_PREFIX} {action_prompt.strip()}"
+def normalize_duration(duration_seconds: int | None) -> int:
+    if duration_seconds is None:
+        return CLIP_DURATION_MIN
+    return max(CLIP_DURATION_MIN, min(CLIP_DURATION_MAX, duration_seconds))
+
+
+def build_style_prefix(duration_seconds: int | None = None) -> str:
+    duration = normalize_duration(duration_seconds)
+    return (
+        "Minimalist hand drawn stick figure animation on an off white paper texture background. "
+        "Black ink line art, simple expressive stick figures, clean educational psychology "
+        "documentary style, smooth motion, consistent character proportions, subtle sketch "
+        "imperfections, no text, no subtitles, no logos, no watermark, no color, no shading, "
+        f"fixed camera, single location, {duration} second clip."
+    )
+
+
+def build_prompt(action_prompt: str, duration_seconds: int | None = None) -> str:
+    return f"{build_style_prefix(duration_seconds)} {action_prompt.strip()}"
+
+
+def build_action(
+    *,
+    setting: str,
+    beat: str,
+    subject: str = "A stick figure",
+    props: list[str] | None = None,
+    motion: str = "",
+    emotion_change: str = "",
+    actors: int = 1,
+) -> str:
+    """Build a reusable action sentence from the clip grammar."""
+    if beat not in BEAT_TYPES:
+        raise ValueError(f"beat must be one of: {', '.join(BEAT_TYPES)}")
+
+    if actors > 2:
+        raise ValueError("Use at most two stick figures per clip.")
+
+    prop_phrase = ""
+    if props:
+        allowed = [prop for prop in props if prop in ALLOWED_PROPS]
+        if allowed:
+            prop_phrase = f" Props: {', '.join(allowed)}."
+
+    parts = [f"{subject} at a {setting}."]
+    if motion:
+        parts.append(motion.strip())
+    if emotion_change:
+        parts.append(emotion_change.strip())
+    if prop_phrase:
+        parts.append(prop_phrase.strip())
+
+    action = " ".join(part for part in parts if part)
+    if not action.endswith("."):
+        action += "."
+    return action
+
+
+def validate_action(action: str) -> list[str]:
+    """Return warnings when an action may be too complex for reliable generation."""
+    warnings: list[str] = []
+    lowered = action.lower()
+
+    if len(action.split()) > 55:
+        warnings.append("Action is long; aim for 20-45 words.")
+
+    complex_words = (
+        "crowd",
+        "city",
+        "restaurant",
+        "party",
+        "classroom",
+        "battle",
+        "car chase",
+        "forest",
+        "mountain",
+        "ocean",
+        "dance floor",
+    )
+    for word in complex_words:
+        if word in lowered:
+            warnings.append(f"Avoid complex visual word: {word}")
+
+    if lowered.count("then") > 3:
+        warnings.append("Too many beats in one clip; split into multiple clips.")
+
+    if "stick figures" in lowered or "three" in lowered or "several" in lowered:
+        warnings.append("Prefer one or two stick figures only.")
+
+    return warnings

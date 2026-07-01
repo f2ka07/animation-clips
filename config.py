@@ -200,15 +200,17 @@ def build_generation_payload(
     prompt: str,
     negative_prompt: str,
     seed: int | None = None,
+    duration_seconds: int | None = None,
 ) -> dict[str, object]:
     resolved_seed = SEED if seed is None else seed
+    resolved_duration = DURATION if duration_seconds is None else duration_seconds
     payload: dict[str, object] = {
         PROMPT_FIELD: prompt,
         NEGATIVE_PROMPT_FIELD: negative_prompt,
         WIDTH_FIELD: WIDTH,
         HEIGHT_FIELD: HEIGHT,
         FPS_FIELD: FPS,
-        DURATION_FIELD: DURATION,
+        DURATION_FIELD: resolved_duration,
         STEPS_FIELD: STEPS,
         CFG_FIELD: CFG,
         SEED_FIELD: resolved_seed,
