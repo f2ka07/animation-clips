@@ -12,10 +12,10 @@ generate_clip.py
         |
    +----+----+----+
    |         |    |
- Runpod    Fal   Local   (future providers)
+   AWS    Runpod  Fal   (future providers)
 ```
 
-Each provider is self-contained under `providers/`. HTTP transport, polling, and response parsing for Runpod live in `providers/runpod.py`. Future providers such as `providers/fal.py` or `providers/local.py` follow the same pattern with no shared client layer.
+Each provider is self-contained under `providers/`. AWS REST and SageMaker transport live in `providers/aws.py`. Runpod remains available as a legacy provider via `PROVIDER=runpod`.
 
 Model selection is also configuration-only:
 
@@ -31,11 +31,11 @@ Switching to `wan3`, `hunyuanvideo`, `ltx`, or another family is an `.env` chang
 ## Requirements
 
 - Python 3.11
-- A Runpod account with a serverless text-to-video endpoint (WAN 2.2 or WAN 2.6 T2V compatible handler)
+- An AWS GPU host running a WAN 2.2 or WAN 2.6 T2V compatible REST API, or a SageMaker endpoint
 
 ## Quick start
 
-1. Set up a Runpod endpoint (see below).
+1. Deploy your WAN video API on AWS (see below).
 2. Configure `.env`.
 3. Install dependencies.
 4. Generate a test clip.
@@ -45,7 +45,7 @@ cd D:\VideoApp\wan-stick-clips
 copy .env.example .env
 ```
 
-Edit `.env` and set at minimum `PROVIDER`, `RUNPOD_MODE`, and either `RUNPOD_ENDPOINT_ID` (serverless) or `POD_HOST` (pod).
+Edit `.env` and set at minimum `PROVIDER=aws`, `AWS_MODE`, `API_HOST` (REST), or `AWS_SAGEMAKER_ENDPOINT_NAME` (SageMaker).
 
 ```bash
 python -m venv .venv
@@ -59,58 +59,77 @@ python generate_clip.py --title "Avoiding Work" --category "procrastination" --t
 
 On Linux/macOS, use `cp .env.example .env` and `source .venv/bin/activate` instead.
 
-## Runpod endpoint setup
+## AWS endpoint setup
 
-You do not need a confirmed endpoint before cloning this project, but you will need one before generating clips.
+Deploy a **WAN 2.2 or WAN 2.6 T2V compatible handler** on AWS as either a REST API (EC2 GPU, ALB, or API Gateway) or a SageMaker endpoint. Copy `.env.example` to `.env` and fill in the connection settings for your deployment mode.
 
-1. Log in to [Runpod](https://www.runpod.io/) and deploy a **WAN 2.2 or WAN 2.6 T2V compatible handler** as either a **Pod** or **Serverless** endpoint.
-2. Create an **API key** under your Runpod account settings.
-3. Copy `.env.example` to `.env` and fill in the connection settings for your deployment mode.
+**Note:** ComfyUI templates are allowed only for manual visual testing. This production CLI assumes a direct REST or SageMaker endpoint.
 
-**Note:** ComfyUI templates are allowed only for manual visual testing. This production CLI assumes a direct Runpod serverless or pod REST endpoint.
-
-### Serverless mode (default)
+### REST mode (default) - EC2, ALB, or API Gateway
 
 Set in `.env`:
 
 ```
-PROVIDER=runpod
-RUNPOD_MODE=serverless
-RUNPOD_API_KEY=your_api_key_here
-RUNPOD_ENDPOINT_ID=your_endpoint_id_here
-```
-
-The client posts to:
-
-`{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{API_GENERATE_PATH}`
-
-Default: `https://api.runpod.ai/v2/{endpoint_id}/run`
-
-Status polling uses:
-
-`{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{API_STATUS_PATH}/{job_id}`
-
-Default: `https://api.runpod.ai/v2/{endpoint_id}/status/{job_id}`
-
-### Pod mode
-
-Set in `.env`:
-
-```
-PROVIDER=runpod
-RUNPOD_MODE=pod
-API_PROTOCOL=http
-POD_HOST=xxx.runpod.net
-POD_PORT=8000
+PROVIDER=aws
+AWS_MODE=rest
+AWS_REGION=us-east-1
+API_PROTOCOL=https
+API_HOST=ec2-xx-xx-xx-xx.compute.amazonaws.com
+API_PORT=8000
 API_GENERATE_PATH=/generate
 API_STATUS_PATH=/status
 ```
 
 The client posts to:
 
-`{API_PROTOCOL}://{POD_HOST}:{POD_PORT}{API_GENERATE_PATH}`
+`{API_PROTOCOL}://{API_HOST}:{API_PORT}{API_GENERATE_PATH}`
 
-`API_PROTOCOL` supports `http` and `https` for REST today. Values like `grpc` or `websocket` are reserved for future provider implementations.
+Status polling uses:
+
+`{API_PROTOCOL}://{API_HOST}:{API_PORT}{API_STATUS_PATH}/{job_id}`
+
+For API Gateway with a key:
+
+```
+USE_AUTH_HEADER=true
+AUTH_HEADER_NAME=x-api-key
+API_AUTH_TOKEN=your_api_gateway_key
+```
+
+### SageMaker mode
+
+Set in `.env`:
+
+```
+PROVIDER=aws
+AWS_MODE=sagemaker
+AWS_REGION=us-east-1
+AWS_SAGEMAKER_ENDPOINT_NAME=wan-t2v-endpoint
+```
+
+Credentials use `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` if set, otherwise the default boto3 credential chain (IAM role, `~/.aws/credentials`, etc.).
+
+### Video output formats
+
+Your worker can return any of:
+
+```json
+{ "video_url": "https://..." }
+```
+
+```json
+{ "video_base64": "..." }
+```
+
+```json
+{ "video_s3_uri": "s3://bucket/path/clip.mp4" }
+```
+
+Field names are configurable via `VIDEO_URL_FIELD`, `VIDEO_BASE64_FIELD`, and `VIDEO_S3_FIELD`.
+
+## Runpod (legacy provider)
+
+To use Runpod instead of AWS, set `PROVIDER=runpod` and configure `RUNPOD_MODE`, `RUNPOD_API_KEY`, and `RUNPOD_ENDPOINT_ID` (serverless) or `API_HOST` (pod). See commented variables at the bottom of `.env.example`.
 
 ### Configurable request payload
 
@@ -171,13 +190,13 @@ cd D:\VideoApp\wan-stick-clips
 copy .env.example .env
 ```
 
-Open `.env` and set connection values for your deployment. Minimum for serverless:
+Open `.env` and set connection values for your deployment. Minimum for AWS REST:
 
 ```
-PROVIDER=runpod
-RUNPOD_MODE=serverless
-RUNPOD_API_KEY=your_api_key_here
-RUNPOD_ENDPOINT_ID=your_endpoint_id_here
+PROVIDER=aws
+AWS_MODE=rest
+API_HOST=ec2-xx-xx-xx-xx.compute.amazonaws.com
+API_PORT=8000
 ```
 
 Create a virtual environment and install dependencies:
@@ -240,33 +259,50 @@ All generation behavior is driven by `.env`. No URLs, JSON field names, model fa
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PROVIDER` | `runpod` | Video provider backend (`runpod` today; more later) |
+| `PROVIDER` | `aws` | Video provider backend (`aws`, `runpod`) |
 
-### Connection (Runpod provider)
+### AWS connection
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `RUNPOD_API_KEY` | | API key (required for serverless) |
+| `AWS_MODE` | `rest` | `rest` (EC2/ALB/API Gateway) or `sagemaker` |
+| `AWS_REGION` | `us-east-1` | AWS region |
+| `AWS_ACCESS_KEY_ID` | | Optional; uses boto3 default chain if empty |
+| `AWS_SECRET_ACCESS_KEY` | | Optional |
+| `AWS_SESSION_TOKEN` | | Optional |
+| `AWS_SAGEMAKER_ENDPOINT_NAME` | | SageMaker endpoint name |
+
+### Generic API connection (AWS REST, Runpod pod)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `API_PROTOCOL` | `http` | Transport protocol (`http`, `https`) |
+| `API_HOST` | | API hostname (EC2 DNS, ALB, API Gateway) |
+| `API_PORT` | `8000` | API port |
+| `API_AUTH_TOKEN` | | Optional bearer or API key token |
+
+Legacy `POD_HOST`, `POD_PORT`, and `POD_SCHEME` are accepted as fallbacks.
+
+### Runpod connection (legacy)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RUNPOD_API_KEY` | | API key (serverless) |
 | `RUNPOD_MODE` | `serverless` | `serverless` or `pod` |
-| `API_PROTOCOL` | `http` | Pod transport protocol (`http`, `https`) |
-| `POD_HOST` | | Pod hostname |
-| `POD_PORT` | `8000` | Pod port |
 | `RUNPOD_ENDPOINT_ID` | | Serverless endpoint ID |
 | `SERVERLESS_BASE_URL` | `https://api.runpod.ai/v2` | Serverless API base URL |
-
-Legacy `POD_SCHEME` is accepted as a fallback for `API_PROTOCOL`.
 
 ### API paths
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `API_TYPE` | `rest` | API transport type |
-| `API_GENERATE_PATH` | `/run` | Generate path (pod: often `/generate`) |
+| `API_GENERATE_PATH` | `/generate` | Generate path |
 | `API_STATUS_PATH` | `/status` | Status path prefix |
 | `AUTH_HEADER_NAME` | `Authorization` | Auth header name |
 | `AUTH_HEADER_PREFIX` | `Bearer` | Auth header prefix |
-| `USE_AUTH_HEADER` | `true` | Send auth header when key is set |
-| `REQUEST_WRAPPER_KEY` | `input` | Wrap payload key; empty = no wrapper |
+| `USE_AUTH_HEADER` | `false` | Send auth header when token is set |
+| `REQUEST_WRAPPER_KEY` | | Wrap payload key; empty = no wrapper |
 | `POLLING_ENABLED` | `true` | Poll for async jobs; `false` for sync APIs |
 
 ### Response mapping
@@ -283,6 +319,7 @@ Legacy `POD_SCHEME` is accepted as a fallback for `API_PROTOCOL`.
 | `STATUS_IN_PROGRESS` | `IN_PROGRESS` |
 | `VIDEO_URL_FIELD` | `video_url` |
 | `VIDEO_BASE64_FIELD` | `video_base64` |
+| `VIDEO_S3_FIELD` | `video_s3_uri` |
 
 ### Model metadata
 
@@ -361,7 +398,8 @@ wan-stick-clips/
 ├── providers/
 │   ├── __init__.py      # create_video_provider()
 │   ├── base.py          # VideoProvider interface
-│   └── runpod.py        # Runpod HTTP transport + generation
+│   ├── aws.py           # AWS REST + SageMaker
+│   └── runpod.py        # Runpod (legacy)
 ├── prompts.py
 ├── generate_clip.py
 ├── batch_generate.py

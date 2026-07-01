@@ -47,17 +47,27 @@ def _bool_env(name: str, default: bool) -> bool:
 
 
 # Provider and connection
-PROVIDER: str = _str_env("PROVIDER", "runpod").lower()
+PROVIDER: str = _str_env("PROVIDER", "aws").lower()
 
-RUNPOD_API_KEY: str = _str_env("RUNPOD_API_KEY")
-RUNPOD_MODE: str = _str_env("RUNPOD_MODE", "serverless").lower()
-
+# Generic API host (EC2, ALB, API Gateway, Runpod pod)
 API_PROTOCOL: str = _str_env(
     "API_PROTOCOL", _str_env("POD_SCHEME", "http")
 ).lower()
-POD_HOST: str = _str_env("POD_HOST")
-POD_PORT: int = _int_env("POD_PORT", 8000)
+API_HOST: str = _str_env("API_HOST", _str_env("POD_HOST", ""))
+API_PORT: int = _int_env("API_PORT", _int_env("POD_PORT", 8000))
+API_AUTH_TOKEN: str = _str_env("API_AUTH_TOKEN")
 
+# AWS
+AWS_MODE: str = _str_env("AWS_MODE", "rest").lower()
+AWS_REGION: str = _str_env("AWS_REGION", "us-east-1")
+AWS_ACCESS_KEY_ID: str = _str_env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY: str = _str_env("AWS_SECRET_ACCESS_KEY")
+AWS_SESSION_TOKEN: str = _str_env("AWS_SESSION_TOKEN")
+AWS_SAGEMAKER_ENDPOINT_NAME: str = _str_env("AWS_SAGEMAKER_ENDPOINT_NAME")
+
+# RunPod (legacy provider)
+RUNPOD_API_KEY: str = _str_env("RUNPOD_API_KEY")
+RUNPOD_MODE: str = _str_env("RUNPOD_MODE", "serverless").lower()
 RUNPOD_ENDPOINT_ID: str = _str_env("RUNPOD_ENDPOINT_ID")
 SERVERLESS_BASE_URL: str = _str_env(
     "SERVERLESS_BASE_URL", "https://api.runpod.ai/v2"
@@ -88,6 +98,7 @@ STATUS_IN_PROGRESS: str = _str_env("STATUS_IN_PROGRESS", "IN_PROGRESS")
 
 VIDEO_URL_FIELD: str = _str_env("VIDEO_URL_FIELD", "video_url")
 VIDEO_BASE64_FIELD: str = _str_env("VIDEO_BASE64_FIELD", "video_base64")
+VIDEO_S3_FIELD: str = _str_env("VIDEO_S3_FIELD", "video_s3_uri")
 
 # Model metadata (optional payload fields)
 MODEL_FAMILY: str = _str_env(
@@ -143,55 +154,20 @@ LOGS_DIR: Path = _BASE_DIR / "logs"
 
 
 def validate_runtime_config() -> None:
-    if PROVIDER != "runpod":
-        raise RuntimeError(
-            f"Unsupported PROVIDER '{PROVIDER}'. Supported providers: runpod"
-        )
+    if PROVIDER == "aws":
+        from providers.aws import validate_config
 
-    if RUNPOD_MODE == "pod":
-        if not POD_HOST:
-            raise RuntimeError("RUNPOD_MODE=pod requires POD_HOST in .env.")
-        if API_PROTOCOL not in {"http", "https"}:
-            raise RuntimeError(
-                f"API_PROTOCOL '{API_PROTOCOL}' is not supported for REST pod URLs. "
-                "Use http or https."
-            )
+        validate_config()
         return
 
-    if RUNPOD_MODE == "serverless":
-        if not RUNPOD_API_KEY:
-            raise RuntimeError(
-                "RUNPOD_MODE=serverless requires RUNPOD_API_KEY in .env."
-            )
-        if not RUNPOD_ENDPOINT_ID:
-            raise RuntimeError(
-                "RUNPOD_MODE=serverless requires RUNPOD_ENDPOINT_ID in .env."
-            )
+    if PROVIDER == "runpod":
+        from providers.runpod import validate_config
+
+        validate_config()
         return
 
     raise RuntimeError(
-        f"Unsupported RUNPOD_MODE '{RUNPOD_MODE}'. Use 'pod' or 'serverless'."
-    )
-
-
-def _build_pod_base_url() -> str:
-    return f"{API_PROTOCOL}://{POD_HOST}:{POD_PORT}"
-
-
-def build_generate_url() -> str:
-    validate_runtime_config()
-    if RUNPOD_MODE == "pod":
-        return f"{_build_pod_base_url()}{API_GENERATE_PATH}"
-    return f"{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{API_GENERATE_PATH}"
-
-
-def build_status_url(job_id: str) -> str:
-    validate_runtime_config()
-    status_path = API_STATUS_PATH.rstrip("/")
-    if RUNPOD_MODE == "pod":
-        return f"{_build_pod_base_url()}{status_path}/{job_id}"
-    return (
-        f"{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{status_path}/{job_id}"
+        f"Unsupported PROVIDER '{PROVIDER}'. Supported providers: aws, runpod"
     )
 
 

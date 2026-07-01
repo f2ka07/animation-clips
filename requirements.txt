@@ -2,3 +2,4 @@ requests
 python-dotenv
 pydantic
 rich
+boto3
