@@ -10,12 +10,19 @@ _BASE_DIR = Path(__file__).resolve().parent
 
 def _require(name: str) -> str:
     value = os.getenv(name)
-    if not value:
+    if value is None or value.strip() == "":
         raise RuntimeError(
             f"Missing required environment variable: {name}. "
             f"Copy .env.example to .env and set {name}."
         )
-    return value
+    return value.strip()
+
+
+def _str_env(name: str, default: str = "") -> str:
+    value = os.getenv(name)
+    if value is None or value.strip() == "":
+        return default
+    return value.strip()
 
 
 def _int_env(name: str, default: int) -> int:
@@ -25,12 +32,104 @@ def _int_env(name: str, default: int) -> int:
     return int(raw)
 
 
-def get_runpod_api_key() -> str:
-    return _require("RUNPOD_API_KEY")
+def _float_env(name: str, default: float) -> float:
+    raw = os.getenv(name)
+    if raw is None or raw.strip() == "":
+        return default
+    return float(raw)
 
 
-def get_runpod_endpoint_id() -> str:
-    return _require("RUNPOD_ENDPOINT_ID")
+def _bool_env(name: str, default: bool) -> bool:
+    raw = os.getenv(name)
+    if raw is None or raw.strip() == "":
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+# Provider and connection
+PROVIDER: str = _str_env("PROVIDER", "runpod").lower()
+
+RUNPOD_API_KEY: str = _str_env("RUNPOD_API_KEY")
+RUNPOD_MODE: str = _str_env("RUNPOD_MODE", "serverless").lower()
+
+API_PROTOCOL: str = _str_env(
+    "API_PROTOCOL", _str_env("POD_SCHEME", "http")
+).lower()
+POD_HOST: str = _str_env("POD_HOST")
+POD_PORT: int = _int_env("POD_PORT", 8000)
+
+RUNPOD_ENDPOINT_ID: str = _str_env("RUNPOD_ENDPOINT_ID")
+SERVERLESS_BASE_URL: str = _str_env(
+    "SERVERLESS_BASE_URL", "https://api.runpod.ai/v2"
+).rstrip("/")
+
+# API paths and transport
+API_TYPE: str = _str_env("API_TYPE", "rest")
+API_GENERATE_PATH: str = _str_env("API_GENERATE_PATH", "/run")
+API_STATUS_PATH: str = _str_env("API_STATUS_PATH", "/status")
+
+AUTH_HEADER_NAME: str = _str_env("AUTH_HEADER_NAME", "Authorization")
+AUTH_HEADER_PREFIX: str = _str_env("AUTH_HEADER_PREFIX", "Bearer")
+USE_AUTH_HEADER: bool = _bool_env("USE_AUTH_HEADER", True)
+
+REQUEST_WRAPPER_KEY: str = _str_env("REQUEST_WRAPPER_KEY", "input")
+POLLING_ENABLED: bool = _bool_env("POLLING_ENABLED", True)
+
+# Response field mapping
+JOB_ID_FIELD: str = _str_env("JOB_ID_FIELD", "id")
+STATUS_FIELD: str = _str_env("STATUS_FIELD", "status")
+OUTPUT_FIELD: str = _str_env("OUTPUT_FIELD", "output")
+ERROR_FIELD: str = _str_env("ERROR_FIELD", "error")
+
+STATUS_COMPLETED: str = _str_env("STATUS_COMPLETED", "COMPLETED")
+STATUS_FAILED: str = _str_env("STATUS_FAILED", "FAILED")
+STATUS_IN_QUEUE: str = _str_env("STATUS_IN_QUEUE", "IN_QUEUE")
+STATUS_IN_PROGRESS: str = _str_env("STATUS_IN_PROGRESS", "IN_PROGRESS")
+
+VIDEO_URL_FIELD: str = _str_env("VIDEO_URL_FIELD", "video_url")
+VIDEO_BASE64_FIELD: str = _str_env("VIDEO_BASE64_FIELD", "video_base64")
+
+# Model metadata (optional payload fields)
+MODEL_FAMILY: str = _str_env(
+    "MODEL_FAMILY", _str_env("MODEL_BACKEND", "wan")
+)
+MODEL_BACKEND: str = MODEL_FAMILY
+MODEL_NAME: str = _str_env("MODEL_NAME", "wan2.2")
+MODEL_TASK: str = _str_env("MODEL_TASK", _str_env("MODEL_VARIANT", "t2v"))
+MODEL_VERSION: str = _str_env("MODEL_VERSION", "v43")
+MODEL_INCLUDE_IN_PAYLOAD: bool = _bool_env("MODEL_INCLUDE_IN_PAYLOAD", False)
+MODEL_FAMILY_FIELD: str = _str_env("MODEL_FAMILY_FIELD", "model_family")
+MODEL_NAME_FIELD: str = _str_env("MODEL_NAME_FIELD", "model_name")
+MODEL_TASK_FIELD: str = _str_env(
+    "MODEL_TASK_FIELD", _str_env("MODEL_VARIANT_FIELD", "model_task")
+)
+MODEL_VERSION_FIELD: str = _str_env("MODEL_VERSION_FIELD", "model_version")
+
+# Request payload field mapping
+PROMPT_FIELD: str = _str_env("PROMPT_FIELD", "prompt")
+NEGATIVE_PROMPT_FIELD: str = _str_env("NEGATIVE_PROMPT_FIELD", "negative_prompt")
+WIDTH_FIELD: str = _str_env("WIDTH_FIELD", "width")
+HEIGHT_FIELD: str = _str_env("HEIGHT_FIELD", "height")
+FPS_FIELD: str = _str_env("FPS_FIELD", "fps")
+DURATION_FIELD: str = _str_env("DURATION_FIELD", "duration_seconds")
+STEPS_FIELD: str = _str_env("STEPS_FIELD", "steps")
+CFG_FIELD: str = _str_env("CFG_FIELD", "cfg")
+SEED_FIELD: str = _str_env("SEED_FIELD", "seed")
+
+# Video defaults (legacy DEFAULT_* names still supported)
+WIDTH: int = _int_env("WIDTH", _int_env("DEFAULT_WIDTH", 832))
+HEIGHT: int = _int_env("HEIGHT", _int_env("DEFAULT_HEIGHT", 480))
+FPS: int = _int_env("FPS", _int_env("DEFAULT_FPS", 16))
+DURATION: int = _int_env("DURATION", _int_env("DEFAULT_DURATION_SECONDS", 5))
+STEPS: int = _int_env("STEPS", _int_env("DEFAULT_STEPS", 25))
+CFG: int = _int_env("CFG", _int_env("DEFAULT_CFG", 5))
+SEED: int = _int_env("SEED", _int_env("DEFAULT_SEED", -1))
+
+# Polling
+POLL_INTERVAL: float = _float_env("POLL_INTERVAL", 5.0)
+TIMEOUT: float = _float_env("TIMEOUT", 600.0)
+
+# Local project paths
 OUTPUT_DIR: Path = Path(os.getenv("OUTPUT_DIR", "outputs"))
 if not OUTPUT_DIR.is_absolute():
     OUTPUT_DIR = _BASE_DIR / OUTPUT_DIR
@@ -39,16 +138,91 @@ CLIP_INDEX: Path = Path(os.getenv("CLIP_INDEX", "data/clips_index.json"))
 if not CLIP_INDEX.is_absolute():
     CLIP_INDEX = _BASE_DIR / CLIP_INDEX
 
-DEFAULT_DURATION_SECONDS: int = _int_env("DEFAULT_DURATION_SECONDS", 5)
-DEFAULT_FPS: int = _int_env("DEFAULT_FPS", 16)
-DEFAULT_WIDTH: int = _int_env("DEFAULT_WIDTH", 832)
-DEFAULT_HEIGHT: int = _int_env("DEFAULT_HEIGHT", 480)
-DEFAULT_STEPS: int = _int_env("DEFAULT_STEPS", 25)
-DEFAULT_CFG: int = _int_env("DEFAULT_CFG", 5)
-DEFAULT_SEED: int = _int_env("DEFAULT_SEED", -1)
-
-POLL_INTERVAL_SECONDS: float = 5.0
-JOB_TIMEOUT_SECONDS: float = 600.0
-
 CLIP_SPECS_PATH: Path = _BASE_DIR / "data" / "clip_specs.json"
 LOGS_DIR: Path = _BASE_DIR / "logs"
+
+
+def validate_runtime_config() -> None:
+    if PROVIDER != "runpod":
+        raise RuntimeError(
+            f"Unsupported PROVIDER '{PROVIDER}'. Supported providers: runpod"
+        )
+
+    if RUNPOD_MODE == "pod":
+        if not POD_HOST:
+            raise RuntimeError("RUNPOD_MODE=pod requires POD_HOST in .env.")
+        if API_PROTOCOL not in {"http", "https"}:
+            raise RuntimeError(
+                f"API_PROTOCOL '{API_PROTOCOL}' is not supported for REST pod URLs. "
+                "Use http or https."
+            )
+        return
+
+    if RUNPOD_MODE == "serverless":
+        if not RUNPOD_API_KEY:
+            raise RuntimeError(
+                "RUNPOD_MODE=serverless requires RUNPOD_API_KEY in .env."
+            )
+        if not RUNPOD_ENDPOINT_ID:
+            raise RuntimeError(
+                "RUNPOD_MODE=serverless requires RUNPOD_ENDPOINT_ID in .env."
+            )
+        return
+
+    raise RuntimeError(
+        f"Unsupported RUNPOD_MODE '{RUNPOD_MODE}'. Use 'pod' or 'serverless'."
+    )
+
+
+def _build_pod_base_url() -> str:
+    return f"{API_PROTOCOL}://{POD_HOST}:{POD_PORT}"
+
+
+def build_generate_url() -> str:
+    validate_runtime_config()
+    if RUNPOD_MODE == "pod":
+        return f"{_build_pod_base_url()}{API_GENERATE_PATH}"
+    return f"{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{API_GENERATE_PATH}"
+
+
+def build_status_url(job_id: str) -> str:
+    validate_runtime_config()
+    status_path = API_STATUS_PATH.rstrip("/")
+    if RUNPOD_MODE == "pod":
+        return f"{_build_pod_base_url()}{status_path}/{job_id}"
+    return (
+        f"{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{status_path}/{job_id}"
+    )
+
+
+def build_generation_payload(
+    prompt: str,
+    negative_prompt: str,
+    seed: int | None = None,
+) -> dict[str, object]:
+    resolved_seed = SEED if seed is None else seed
+    payload: dict[str, object] = {
+        PROMPT_FIELD: prompt,
+        NEGATIVE_PROMPT_FIELD: negative_prompt,
+        WIDTH_FIELD: WIDTH,
+        HEIGHT_FIELD: HEIGHT,
+        FPS_FIELD: FPS,
+        DURATION_FIELD: DURATION,
+        STEPS_FIELD: STEPS,
+        CFG_FIELD: CFG,
+        SEED_FIELD: resolved_seed,
+    }
+
+    if MODEL_INCLUDE_IN_PAYLOAD:
+        payload[MODEL_FAMILY_FIELD] = MODEL_FAMILY
+        payload[MODEL_NAME_FIELD] = MODEL_NAME
+        payload[MODEL_TASK_FIELD] = MODEL_TASK
+        payload[MODEL_VERSION_FIELD] = MODEL_VERSION
+
+    return payload
+
+
+def wrap_request_body(payload: dict[str, object]) -> dict[str, object]:
+    if REQUEST_WRAPPER_KEY:
+        return {REQUEST_WRAPPER_KEY: payload}
+    return payload

@@ -13,14 +13,14 @@ from library import (
     update_clip,
 )
 from prompts import NEGATIVE_PROMPT, build_prompt
-from runpod_client import RunpodClient, RunpodError
+from providers import VideoProviderError, create_video_provider
 
 console = Console()
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate a single stick figure psychology clip via Runpod."
+        description="Generate a single stick figure psychology clip via the configured video provider."
     )
     parser.add_argument("--title", required=True, help="Clip title")
     parser.add_argument("--category", required=True, help="Clip category")
@@ -37,7 +37,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--seed",
         type=int,
-        default=config.DEFAULT_SEED,
+        default=config.SEED,
         help="Random seed (-1 for random)",
     )
     return parser.parse_args()
@@ -56,7 +56,7 @@ def generate_clip(
 ) -> ClipRecord:
     prompt = build_prompt(action)
     negative_prompt = NEGATIVE_PROMPT
-    resolved_seed = config.DEFAULT_SEED if seed is None else seed
+    resolved_seed = config.SEED if seed is None else seed
 
     existing_failed = find_failed_by_title_category(title, category)
     if existing_failed:
@@ -76,12 +76,12 @@ def generate_clip(
             tags=tags,
             prompt=prompt,
             negative_prompt=negative_prompt,
-            duration_seconds=config.DEFAULT_DURATION_SECONDS,
-            width=config.DEFAULT_WIDTH,
-            height=config.DEFAULT_HEIGHT,
-            fps=config.DEFAULT_FPS,
-            steps=config.DEFAULT_STEPS,
-            cfg=config.DEFAULT_CFG,
+            duration_seconds=config.DURATION,
+            width=config.WIDTH,
+            height=config.HEIGHT,
+            fps=config.FPS,
+            steps=config.STEPS,
+            cfg=config.CFG,
             seed=resolved_seed,
             status=ClipStatus.PENDING,
         )
@@ -90,30 +90,24 @@ def generate_clip(
     record.status = ClipStatus.RUNNING
     update_clip(record)
 
-    input_payload = {
-        "prompt": prompt,
-        "negative_prompt": negative_prompt,
-        "width": config.DEFAULT_WIDTH,
-        "height": config.DEFAULT_HEIGHT,
-        "duration_seconds": config.DEFAULT_DURATION_SECONDS,
-        "fps": config.DEFAULT_FPS,
-        "steps": config.DEFAULT_STEPS,
-        "cfg": config.DEFAULT_CFG,
-        "seed": resolved_seed,
-    }
+    input_payload = config.build_generation_payload(
+        prompt=prompt,
+        negative_prompt=negative_prompt,
+        seed=resolved_seed,
+    )
 
-    client = RunpodClient()
+    provider = create_video_provider()
     filename = build_output_filename(category, title)
     output_path = config.OUTPUT_DIR / filename
 
     try:
-        output = client.run(input_payload)
-        client.save_video_output(output, output_path)
+        output = provider.generate(input_payload)
+        provider.save_video(output, output_path)
         record.filename = filename
         record.status = ClipStatus.COMPLETED
         update_clip(record)
         return record
-    except (RunpodError, Exception) as exc:
+    except (VideoProviderError, Exception) as exc:
         record.status = ClipStatus.FAILED
         update_clip(record)
         raise exc

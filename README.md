@@ -1,11 +1,37 @@
 # wan-stick-clips
 
-Local CLI tool for generating reusable 5-second stick figure psychology clips using Runpod text-to-video. Clips are labelled, indexed, and searchable for reuse in a YouTube channel called "The Psychology of".
+Local CLI tool for generating reusable 5-second stick figure psychology clips via a configurable video provider. Clips are labelled, indexed, and searchable for reuse in a YouTube channel called "The Psychology of".
+
+## Architecture
+
+```
+generate_clip.py
+        |
+        v
+  VideoProvider  (PROVIDER in .env)
+        |
+   +----+----+----+
+   |         |    |
+ Runpod    Fal   Local   (future providers)
+```
+
+The application does not hardcode Runpod or WAN. `generate_clip.py` calls `create_video_provider()`, which loads the provider named in `.env`. Today `PROVIDER=runpod` is supported. Future providers (Fal, Replicate, local GPU, etc.) plug in without changing the CLI or library code.
+
+Model selection is also configuration-only:
+
+```
+MODEL_FAMILY=wan
+MODEL_NAME=wan2.2
+MODEL_TASK=t2v
+MODEL_VERSION=v43
+```
+
+Switching to `wan3`, `hunyuanvideo`, `ltx`, or another family is an `.env` change, not a code change.
 
 ## Requirements
 
 - Python 3.11
-- A Runpod account with a serverless text-to-video endpoint (WAN 2.6 T2V or compatible handler)
+- A Runpod account with a serverless text-to-video endpoint (WAN 2.2 or WAN 2.6 T2V compatible handler)
 
 ## Quick start
 
@@ -19,7 +45,7 @@ cd D:\VideoApp\wan-stick-clips
 copy .env.example .env
 ```
 
-Edit `.env` and set `RUNPOD_API_KEY` and `RUNPOD_ENDPOINT_ID`.
+Edit `.env` and set at minimum `PROVIDER`, `RUNPOD_MODE`, and either `RUNPOD_ENDPOINT_ID` (serverless) or `POD_HOST` (pod).
 
 ```bash
 python -m venv .venv
@@ -37,13 +63,58 @@ On Linux/macOS, use `cp .env.example .env` and `source .venv/bin/activate` inste
 
 You do not need a confirmed endpoint before cloning this project, but you will need one before generating clips.
 
-1. Log in to [Runpod](https://www.runpod.io/) and open **Serverless**.
-2. Create a new endpoint that runs a **WAN 2.6 text-to-video** worker (or any handler that accepts the input format below).
-3. Deploy the endpoint and note the **Endpoint ID**.
-4. Create an **API key** under your Runpod account settings.
-5. Paste both values into `.env`.
+1. Log in to [Runpod](https://www.runpod.io/) and deploy a **WAN 2.2 or WAN 2.6 T2V compatible handler** as either a **Pod** or **Serverless** endpoint.
+2. Create an **API key** under your Runpod account settings.
+3. Copy `.env.example` to `.env` and fill in the connection settings for your deployment mode.
 
-The client sends this JSON body to `POST https://api.runpod.ai/v2/{endpoint_id}/run`:
+**Note:** ComfyUI templates are allowed only for manual visual testing. This production CLI assumes a direct Runpod serverless or pod REST endpoint.
+
+### Serverless mode (default)
+
+Set in `.env`:
+
+```
+PROVIDER=runpod
+RUNPOD_MODE=serverless
+RUNPOD_API_KEY=your_api_key_here
+RUNPOD_ENDPOINT_ID=your_endpoint_id_here
+```
+
+The client posts to:
+
+`{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{API_GENERATE_PATH}`
+
+Default: `https://api.runpod.ai/v2/{endpoint_id}/run`
+
+Status polling uses:
+
+`{SERVERLESS_BASE_URL}/{RUNPOD_ENDPOINT_ID}{API_STATUS_PATH}/{job_id}`
+
+Default: `https://api.runpod.ai/v2/{endpoint_id}/status/{job_id}`
+
+### Pod mode
+
+Set in `.env`:
+
+```
+PROVIDER=runpod
+RUNPOD_MODE=pod
+API_PROTOCOL=http
+POD_HOST=xxx.runpod.net
+POD_PORT=8000
+API_GENERATE_PATH=/generate
+API_STATUS_PATH=/status
+```
+
+The client posts to:
+
+`{API_PROTOCOL}://{POD_HOST}:{POD_PORT}{API_GENERATE_PATH}`
+
+`API_PROTOCOL` supports `http` and `https` for REST today. Values like `grpc` or `websocket` are reserved for future provider implementations.
+
+### Configurable request payload
+
+Field names are fully configurable in `.env`. The default serverless payload maps to:
 
 ```json
 {
@@ -61,6 +132,20 @@ The client sends this JSON body to `POST https://api.runpod.ai/v2/{endpoint_id}/
 }
 ```
 
+If your worker expects different names (for example `text` instead of `prompt`, or `num_steps` instead of `steps`), update the `*_FIELD` variables in `.env` without changing Python code.
+
+Example for an alternate API:
+
+```
+PROMPT_FIELD=text
+STEPS_FIELD=num_steps
+REQUEST_WRAPPER_KEY=
+```
+
+An empty `REQUEST_WRAPPER_KEY` sends the payload directly without an `input` wrapper.
+
+### Expected response
+
 Your worker should return either:
 
 ```json
@@ -73,7 +158,9 @@ or:
 { "output": { "video_base64": "..." } }
 ```
 
-Adjust your Runpod handler if field names differ, but keep this project aligned with the format above.
+Response field names are also configurable via `OUTPUT_FIELD`, `VIDEO_URL_FIELD`, and `VIDEO_BASE64_FIELD`.
+
+Switching images (for example from `docker.io/antilopax/wan22:v43` to a future WAN build) is usually a matter of updating `.env`, not code.
 
 ## Local setup
 
@@ -84,9 +171,11 @@ cd D:\VideoApp\wan-stick-clips
 copy .env.example .env
 ```
 
-Open `.env` and set:
+Open `.env` and set connection values for your deployment. Minimum for serverless:
 
 ```
+PROVIDER=runpod
+RUNPOD_MODE=serverless
 RUNPOD_API_KEY=your_api_key_here
 RUNPOD_ENDPOINT_ID=your_endpoint_id_here
 ```
@@ -145,25 +234,111 @@ python library.py --title "Avoiding Work"
 
 ## Configuration
 
-Defaults are in `.env.example`:
+All generation behavior is driven by `.env`. No URLs, JSON field names, model families, or provider details are hardcoded in Python.
+
+### Provider
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PROVIDER` | `runpod` | Video provider backend (`runpod` today; more later) |
+
+### Connection (Runpod provider)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RUNPOD_API_KEY` | | API key (required for serverless) |
+| `RUNPOD_MODE` | `serverless` | `serverless` or `pod` |
+| `API_PROTOCOL` | `http` | Pod transport protocol (`http`, `https`) |
+| `POD_HOST` | | Pod hostname |
+| `POD_PORT` | `8000` | Pod port |
+| `RUNPOD_ENDPOINT_ID` | | Serverless endpoint ID |
+| `SERVERLESS_BASE_URL` | `https://api.runpod.ai/v2` | Serverless API base URL |
+
+Legacy `POD_SCHEME` is accepted as a fallback for `API_PROTOCOL`.
+
+### API paths
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `API_TYPE` | `rest` | API transport type |
+| `API_GENERATE_PATH` | `/run` | Generate path (pod: often `/generate`) |
+| `API_STATUS_PATH` | `/status` | Status path prefix |
+| `AUTH_HEADER_NAME` | `Authorization` | Auth header name |
+| `AUTH_HEADER_PREFIX` | `Bearer` | Auth header prefix |
+| `USE_AUTH_HEADER` | `true` | Send auth header when key is set |
+| `REQUEST_WRAPPER_KEY` | `input` | Wrap payload key; empty = no wrapper |
+| `POLLING_ENABLED` | `true` | Poll for async jobs; `false` for sync APIs |
+
+### Response mapping
 
 | Variable | Default |
 |----------|---------|
+| `JOB_ID_FIELD` | `id` |
+| `STATUS_FIELD` | `status` |
+| `OUTPUT_FIELD` | `output` |
+| `ERROR_FIELD` | `error` |
+| `STATUS_COMPLETED` | `COMPLETED` |
+| `STATUS_FAILED` | `FAILED` |
+| `STATUS_IN_QUEUE` | `IN_QUEUE` |
+| `STATUS_IN_PROGRESS` | `IN_PROGRESS` |
+| `VIDEO_URL_FIELD` | `video_url` |
+| `VIDEO_BASE64_FIELD` | `video_base64` |
+
+### Model metadata
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MODEL_FAMILY` | `wan` | Model family (`wan`, `hunyuanvideo`, `ltx`, etc.) |
+| `MODEL_BACKEND` | `wan` | Alias for `MODEL_FAMILY` |
+| `MODEL_NAME` | `wan2.2` | Specific model name |
+| `MODEL_TASK` | `t2v` | Task type (`t2v`, `i2v`, etc.) |
+| `MODEL_VERSION` | `v43` | Model version or image tag |
+| `MODEL_INCLUDE_IN_PAYLOAD` | `false` | Send model fields in the request body |
+| `MODEL_FAMILY_FIELD` | `model_family` | Payload key for family |
+| `MODEL_NAME_FIELD` | `model_name` | Payload key for name |
+| `MODEL_TASK_FIELD` | `model_task` | Payload key for task |
+| `MODEL_VERSION_FIELD` | `model_version` | Payload key for version |
+
+Legacy `MODEL_VARIANT` and `MODEL_VARIANT_FIELD` are accepted as fallbacks for `MODEL_TASK`.
+
+### Request field mapping
+
+| Variable | Default |
+|----------|---------|
+| `PROMPT_FIELD` | `prompt` |
+| `NEGATIVE_PROMPT_FIELD` | `negative_prompt` |
+| `WIDTH_FIELD` | `width` |
+| `HEIGHT_FIELD` | `height` |
+| `FPS_FIELD` | `fps` |
+| `DURATION_FIELD` | `duration_seconds` |
+| `STEPS_FIELD` | `steps` |
+| `CFG_FIELD` | `cfg` |
+| `SEED_FIELD` | `seed` |
+
+### Video defaults
+
+| Variable | Default |
+|----------|---------|
+| `WIDTH` | `832` |
+| `HEIGHT` | `480` |
+| `FPS` | `16` |
+| `DURATION` | `5` |
+| `STEPS` | `25` |
+| `CFG` | `5` |
+| `SEED` | `-1` |
+
+Legacy names `DEFAULT_WIDTH`, `DEFAULT_HEIGHT`, etc. are still accepted as fallbacks.
+
+### Polling and local paths
+
+| Variable | Default |
+|----------|---------|
+| `POLL_INTERVAL` | `5` |
+| `TIMEOUT` | `600` |
 | `OUTPUT_DIR` | `outputs` |
 | `CLIP_INDEX` | `data/clips_index.json` |
-| `DEFAULT_DURATION_SECONDS` | `5` |
-| `DEFAULT_FPS` | `16` |
-| `DEFAULT_WIDTH` | `832` |
-| `DEFAULT_HEIGHT` | `480` |
-| `DEFAULT_STEPS` | `25` |
-| `DEFAULT_CFG` | `5` |
-| `DEFAULT_SEED` | `-1` |
 
-Runpod polling defaults (in `config.py`):
-
-- Poll interval: 5 seconds
-- Job timeout: 10 minutes
-- Max retries per clip in batch: 2
+Batch max retries per clip: 2 (in `batch_generate.py`).
 
 ## Clip status values
 
@@ -183,6 +358,10 @@ wan-stick-clips/
 ├── requirements.txt
 ├── README.md
 ├── config.py
+├── providers/
+│   ├── __init__.py
+│   ├── base.py
+│   └── runpod.py
 ├── runpod_client.py
 ├── prompts.py
 ├── generate_clip.py
